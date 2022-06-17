@@ -1,0 +1,85 @@
+﻿@*@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment env
+@using Microsoft.AspNetCore.Hosting*@
+
+@*@{
+    string hst = null;
+
+    if (!env.IsDevelopment())
+    {
+        hst = Context.Request.Scheme + "://" + Context.Request.Host + "/ABridgeHomeAsp";
+        //env.IsStaging();
+        //env.IsDevelopment();
+        //env.IsEnvironment("EnvironmentName");
+    }
+    else
+    {
+        hst = Context.Request.Scheme + "://" + Context.Request.Host;
+    }
+
+    // https://stackoverflow.com/questions/33719609/determine-asp-net-core-environment-name-in-the-views
+    //   https://github.com/rdvojmoc/DinkToPdf/issues/27
+}*@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags --->
+
+    <meta name="description" content="Bureau of Engineering, City of Los Angeles, ::: Universal Cashiering System :::">
+    <meta name="keywords" content="City of Los Angeles ::: Universal Cashiering System :::">
+    <meta name="author" content="Essam Amarragy">
+
+    <title>::: Universal Cashiering System :::</title>
+
+    @*<link rel="stylesheet" href="@hst/lib/bootstrap-4.3.1/css/bootstrap.css" />
+        <link rel="stylesheet" href="@hst/css/PdfStyling.css" />*@
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<style>
+    .title {
+    color: #993300;
+    }
+
+    .subtitle {
+    color: #993300;
+    }
+
+    hr {
+    border-color: #d9d9d9;
+    }
+
+    .data {
+    color: #800000 !important; /* maroon color for data */
+    }
+
+    .card {
+    box-shadow: 3px 3px 5px #d9d9d9;
+    margin-bottom: 15px;
+    }
+
+
+    .card-header {
+    background-color: #598027; /*      #01579b    #4d6a79  */
+    color: #FFF;
+    font-weight: normal;
+    }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div>
+        @RenderBody()
+    </div>
+
+</body>
+</html>

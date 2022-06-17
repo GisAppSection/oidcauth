@@ -1,0 +1,21 @@
+﻿<script>
+    var tMsg = @(TempData["tMsg"]!=null? Html.Raw(TempData["tMsg"]) : Html.Raw("undefined"));
+    //console.log(tMsg);
+    if (tMsg) {
+
+        switch (tMsg.Ttype) {
+            case "Info":
+                toastr.info(tMsg.Tmessage, tMsg.Ttitle);
+                    break;
+            case "Success":
+                toastr.success(tMsg.Tmessage, tMsg.Ttitle);
+                    break;
+            case "Warning":
+                toastr.warning(tMsg.Tmessage, tMsg.Ttitle);
+                    break;
+            case "Error":
+                toastr.error(tMsg.Tmessage, tMsg.Ttitle);
+                    break;
+            }
+        }
+</script>

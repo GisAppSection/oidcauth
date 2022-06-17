@@ -1,0 +1,27 @@
+﻿.title {
+    color: maroon;
+}
+
+.subtitle {
+    color: maroon;
+}
+
+hr {
+    border-color: silver;
+}
+
+.data {
+    color: #800000 !important; /* maroon color for data */
+}
+
+.card {
+    box-shadow: 3px 3px 5px #d9d9d9;
+    margin-bottom: 15px;
+}
+
+
+.card-header {
+    background-color: #598027; /*      #01579b    #4d6a79  */
+    color: #FFF;
+    font-weight: normal;
+}

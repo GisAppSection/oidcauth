@@ -1,0 +1,32 @@
+﻿<div class="container mt-3">
+        <div class="row">
+            <div class="col-xs-12 col-lg-8 mx-auto">
+
+                <div class="card">
+                    <div class="card-header bg-danger text-white">*** Attention ***</div>
+                    <div class="card-body">
+
+                        @if (ViewBag.Message != null)
+                        {
+                            <div class="text-danger">@Html.Raw(ViewBag.Message)<br /></div>
+
+                            <hr />
+                        }
+                        else
+                        {
+                            <div class="text-danger">An Error was encountered.<br /></div>
+
+                            <hr />
+                        }
+
+
+                        <p>For best experience, please use only the navigation buttons provided within the application.  Do not use the browser Back, Forward, or Refresh buttons.</p>
+
+                        <p>Some devices/applications may truncate links and this usually causes errors.  Try a different device/application or copy the full link provided to you and past it into the browser address bar.</p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "bootstrap@4.6.0",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "bootstrap-datepicker@1.9.0",
+      "destination": "wwwroot/lib/bootstrap-datepicker/"
+    },
+    {
+      "library": "font-awesome@4.7.0",
+      "destination": "wwwroot/lib/font-awesome/"
+    },
+    {
+      "library": "datatables@1.10.19",
+      "destination": "wwwroot/lib/datatables/"
+    }
+  ,
+{
+  "library": "jquery-validate@1.19.3",
+  "destination": "wwwroot/lib/jquery-validate/"
+}
+,
+{
+  "library": "jquery-validation-unobtrusive@3.2.12",
+  "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+}
+,
+{
+  "library": "qtip2@3.0.3",
+  "destination": "wwwroot/lib/qtip2/"
+}
+]
+}
