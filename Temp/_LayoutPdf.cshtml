@@ -1,4 +1,7 @@
-﻿@*@{
+﻿@*@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment env
+@using Microsoft.AspNetCore.Hosting*@
+
+@*@{
     string hst = null;
 
     if (!env.IsDevelopment())
@@ -32,7 +35,7 @@
     <meta name="keywords" content="City of Los Angeles ::: Universal Cashiering System :::">
     <meta name="author" content="Essam Amarragy">
 
-    <title>::: OidcAuth :::</title>
+    <title>::: Universal Cashiering System :::</title>
 
     @*<link rel="stylesheet" href="@hst/lib/bootstrap-4.3.1/css/bootstrap.css" />
         <link rel="stylesheet" href="@hst/css/PdfStyling.css" />*@

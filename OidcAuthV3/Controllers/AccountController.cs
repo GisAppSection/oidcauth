@@ -16,23 +16,14 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace OidcAuthV3.Controllers
 {
     public class AccountController : Controller
     {
-        //private readonly IWebHostEnvironment _env;
-        //private readonly IHttpClientFactory _httpClientFactory;
-        //private readonly IConfiguration _configuration;
-        //private readonly string client_id;
-        //private readonly string client_secret;
-        //private readonly string auth_uri;
-        //private readonly string token_uri;
-        //private readonly string redirect_uri;
-        //private readonly string revoke_uri;
         private readonly IDataFunctions _dataFunctions;
 
-
-        public AccountController(IDataFunctions dataFunctions)
+       public AccountController(IDataFunctions dataFunctions)
         {
             //_configuration = configuration;
             //_env = env;
@@ -43,6 +34,11 @@ namespace OidcAuthV3.Controllers
 
         public IActionResult Login(string serviceCode, string agencyCode)
         {
+            if (string.IsNullOrEmpty(serviceCode) || string.IsNullOrEmpty(agencyCode))
+            {
+                ViewBag.Message = "An Error Occured.";
+                return View("_Error");
+            }
             try
             {
                 string getCodeUri = _dataFunctions.GetAuthCode(serviceCode, agencyCode, HttpContext);
@@ -81,21 +77,21 @@ namespace OidcAuthV3.Controllers
 
             JwtJson jwt = await _dataFunctions.GetJwt(code);
 
-            User user = await _dataFunctions.GetUserDetails(jwt);
+            Staff staff = await _dataFunctions.GetStaffDetails(jwt);
 
 
             // User Claims & SignIn Start
             IList<Claim> userClaims = new List<Claim>
                 {
-                    // this will place all user info in a serialized userData claim
-                    new Claim("userData", JsonConvert.SerializeObject(user)),
+                    // this will place all user info in a serialized staffData claim
+                    new Claim("staffData", JsonConvert.SerializeObject(staff)),
                     //new Claim(ClaimTypes.Name, user.UserId.ToString()),  // claim Name = userId for now
                 };
 
 
 
             // place all user data in a session
-            HttpContext.Session.SetJson("userData", user);
+            HttpContext.Session.SetJson("staffData", staff);
 
             var userIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -105,11 +101,36 @@ namespace OidcAuthV3.Controllers
             _ = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
 
+            string baseUrl = _dataFunctions.GetBaseRedirectUri(serviceCode, agencyCode);
+            //"http://localhost/apermits/oidc/loginboeuser.cfm";
+
+
+
+            StringBuilder serviceUri = new StringBuilder();
+            serviceUri = serviceUri.Append(baseUrl);
+            string eemail = Tools.eencrypt(staff.Email);
+            string epaySrId = Tools.eencrypt(staff.PaySrId);
+            string ephotoUrl = Tools.eencrypt(staff.PhotoUrl);
+
+            serviceUri = serviceUri.Append("?eemail=" + eemail);
+            serviceUri = serviceUri.Append("&epaySrId=" + epaySrId);
+            serviceUri = serviceUri.Append("&ephotoUrl=" + ephotoUrl);
+
+            return RedirectToAction("Index","Home");           
+            // return Redirect(serviceUri.ToString());
+            // return View("UserDetails");
             //return View("UserDetails", user);
-            return View("UserDetails");
+            //return View("UserDetails");
 
-            // return RedirectToAction("PostData",user);
 
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
 

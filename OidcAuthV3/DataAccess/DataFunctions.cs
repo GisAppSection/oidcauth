@@ -19,7 +19,7 @@ namespace OidcAuthV3.DataAccess
     {
         private OidcAuthDbContext _oidcAuthContext;
         private readonly IHttpClientFactory _httpClientFactory;
-        private IUserDataService _userDataService;
+        private IStaffDataService _staffDataService;
         private IWebHostEnvironment _env;
         private IConfiguration _configuration;
         private IEmailService _emailService;
@@ -32,10 +32,10 @@ namespace OidcAuthV3.DataAccess
         private readonly string revoke_uri;
 
         private string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        public DataFunctions(OidcAuthDbContext oidcAuthContext, IConfiguration configuration, IWebHostEnvironment env, IEmailService emailService, IUserDataService userDataService, IHttpClientFactory httpClientFactory)
+        public DataFunctions(OidcAuthDbContext oidcAuthContext, IConfiguration configuration, IWebHostEnvironment env, IEmailService emailService, IStaffDataService staffDataService, IHttpClientFactory httpClientFactory)
         {
             _oidcAuthContext = oidcAuthContext;
-            _userDataService = userDataService;
+            _staffDataService = staffDataService;
             _configuration = configuration;
             _emailService = emailService;
             _env = env;
@@ -53,10 +53,10 @@ namespace OidcAuthV3.DataAccess
             revoke_uri = _configuration["GoogleIdm:revoke_uri"];
         }
 
-        public User GetCurrentUserM()
+        public Staff GetCurrentStaffM()
         {
-            User user = _userDataService.GetUser();
-            return user;
+            Staff staff = _staffDataService.GetStaff();
+            return staff;
         }
 
         public string GetBaseRedirectUri(string serviceCode, string agencyCode)
@@ -160,7 +160,8 @@ namespace OidcAuthV3.DataAccess
             return jwt;
         }
 
-        public async Task<User> GetUserDetails(JwtJson jwt)
+
+        public async Task<Staff> GetStaffDetails(JwtJson jwt)
         {
             // keep this one to use for logout
             var idTokenString = jwt.id_token;
@@ -191,11 +192,11 @@ namespace OidcAuthV3.DataAccess
 
             // HttpClient End
 
-            var userDataJson = System.Text.Json.JsonSerializer.Deserialize<UserData>(jsonResult);
+            var staffDataJson = System.Text.Json.JsonSerializer.Deserialize<StaffData>(jsonResult);
 
 
             string oidcAgencyCd = null;
-            var organizations = userDataJson.organizations;
+            var organizations = staffDataJson.organizations;
             var depts = organizations.ToArray();
             var dept = depts[0].department;
             if (dept.Contains("Public Works") && dept.Contains("Engineering"))
@@ -254,38 +255,40 @@ namespace OidcAuthV3.DataAccess
 
 
             // values returned by google IDM+
-            var oidcEmail = userDataJson.primaryEmail;
-            var oidcLastName = userDataJson.name.familyName;
-            var oidcFirstName = userDataJson.name.givenName;
-            var oidcPaySrId = userDataJson.customSchemas.LACityEmployeeID.employeeId;
-            var oidcPhoneNumer = userDataJson.customSchemas.LACityCustomAttributes.LACityWorkNumber;
-            var oidcMobilePhone = userDataJson.customSchemas.LACityCustomAttributes.LACityMobileNumber;
-            var oidcPhotoUrl = userDataJson.thumbnailPhotoUrl;
+            var oidcEmail = staffDataJson.primaryEmail;
+            var oidcLastName = staffDataJson.name.familyName;
+            var oidcFirstName = staffDataJson.name.givenName;
+            var oidcPaySrId = staffDataJson.customSchemas.LACityEmployeeID.employeeId;
+            var oidcPhoneNumer = staffDataJson.customSchemas.LACityCustomAttributes.LACityWorkNumber;
+            var oidcMobilePhone = staffDataJson.customSchemas.LACityCustomAttributes.LACityMobileNumber;
+            var oidcPhotoUrl = staffDataJson.thumbnailPhotoUrl;
             var oidcDept = dept;
 
-            var user = new User();
+            var staff = new Staff();
 
 
 
 
-            user.UserEmail = oidcEmail;
-            user.UserLastName = oidcLastName;
-            user.UserFirstName = oidcFirstName;
-            user.PaySrId = oidcPaySrId;
-            user.UserWorkPhone = oidcPhoneNumer;
-            user.UserMobilePhone = oidcMobilePhone;
-            user.UserPhotoUrl = oidcPhotoUrl;
-            user.Dept = oidcDept;
-            user.AgencyCd = oidcAgencyCd;
-            user.access_token = jwt.access_token;
-            user.expires_in = jwt.expires_in;
+            staff.Email = oidcEmail;
+            staff.LastName = oidcLastName;
+            staff.FirstName = oidcFirstName;
+            staff.PaySrId = oidcPaySrId;
+            staff.WorkPhone = oidcPhoneNumer;
+            staff.MobilePhone = oidcMobilePhone;
+            staff.PhotoUrl = oidcPhotoUrl;
+            staff.Dept = oidcDept;
+            staff.AgencyCd = oidcAgencyCd;
+            staff.access_token = jwt.access_token;
+            staff.expires_in = jwt.expires_in;
 
             if (!string.IsNullOrEmpty(jwt.refresh_token))
             {
-                user.refresh_token = jwt.refresh_token;
+                staff.refresh_token = jwt.refresh_token;
             }
 
-            return user;
+            return staff;
         }
+
+
     }
 }

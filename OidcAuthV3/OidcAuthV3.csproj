@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Views\Account\UserDetails.cshtml" />
     <None Include="Views\Home\Privacy.cshtml" />
   </ItemGroup>
 

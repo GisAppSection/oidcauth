@@ -11,33 +11,32 @@ namespace OidcAuthV3.Models
 {
     public class User
     {
-        
 
-        public string UserFirstName { get; set; }
-        public string UserLastName { get; set; }
 
-        public string UserFullName
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        public string FullName
         {
             get
             {
-                var array = new[] { UserFirstName, UserLastName };
+                var array = new[] { FirstName, LastName };
                 string fullName = string.Join(" ", array.Where(s => !string.IsNullOrWhiteSpace(s)));
                 return fullName;
             }
 
-            set { UserFullName = value; }
+            set { FullName = value; }
 
         }
-
 
         public string PaySrId { get; set; }
         public string Dept { get; set; }
 
         public string AgencyCd { get; set; }
-        public string UserWorkPhone { get; set; }
-        public string UserMobilePhone { get; set; }
-        public string UserEmail { get; set; }
-        public string UserPhotoUrl { get; set; }
+        public string WorkPhone { get; set; }
+        public string MobilePhone { get; set; }
+        public string Email { get; set; }
+        public string PhotoUrl { get; set; }
         public string access_token { get; set; }
         public int? expires_in { get; set; }
         public string refresh_token { get; set; }

@@ -1,13 +1,14 @@
-﻿@*@using OidcAuthV3.DataAccess*@
+﻿@*@using OidcAuthV3.DataAccess
 @inject IDataFunctions df
 
-
+@inject IUserDataService userDataService
 @{
-    Staff staff = df.GetCurrentStaffM();
+    User user = userDataService.GetUser();
 }
 
+
 @using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
+@inject IConfiguration Configuration*@
 
 <style>
     a.dropdown-item {
@@ -25,7 +26,7 @@
 </style>
 
 <nav class="navbar navbar-expand-xl navbar-custom navbar-dark">
-    <div class="yellow text-center h5">OidcAuth</div>
+    <div class="yellow text-center h5">Google IDM Testing</div>
 
     <a class="navbar-brand" href="https://eng.lacity.org/" target="_blank">
         &nbsp;&nbsp;&nbsp;
@@ -44,22 +45,33 @@
             <li class="nav-item">
                 <h5><a class="nav-link" asp-controller="Public" asp-action="Instructions"><span class="fa fa-info fa-x"></span> Instructions</a></h5>
             </li>
+
+@*            @if (user != null)
+            {
+                <li class="nav-item">
+                    <h5><a class="nav-link" asp-controller="Public" asp-action="NewServiceRequest"><span class="fa fa-plus fa-x"></span> Revoke Token</a></h5>
+                </li>
+
+                <li class="nav-item">
+                    <h5><a class="nav-link spin" asp-controller="Public" asp-action="MyServiceRequests"><span class="fa fa-folder-open fa-x"></span> Refresh Token</a></h5>
+                </li>
+
+            }*@
         </ul>
 
         <ul class="nav navbar-nav ml-auto">
 
-            @if (!@User.Identity.IsAuthenticated)
-            {
+@*            @if (!@User.Identity.IsAuthenticated)
+            {*@
                 @*<li class="nav-item"><h5><a class="nav-link" asp-controller="Home" asp-action="Login"><span class="fa fa-power-off"></span> Log in</a></h5></li>*@
 
-                <li class="nav-item"><h5>Not Authenticated</h5></li>
-                @*<a class="nav-link" asp-action="Login" asp-controller="Account"><span class="fa fa-power-off"></span> Login</a>*@
-            }
+@*                <li class="nav-item"><h5><a class="nav-link" asp-action="Login" asp-controller="Account"><span class="fa fa-power-off"></span> Login</a></h5></li>
+            }*@
 
-            @if (@User.Identity.IsAuthenticated)
-            {
+@*            @if (@User.Identity.IsAuthenticated)
+            {*@
 
-@*                <li class="nav-item ">
+                @*<li class="nav-item ">
                     <form method="post" asp-controller="Home" asp-action="Logout">
                     <button type="submit" style="width:auto"
                     class="nav-link btn btn-link">
@@ -68,22 +80,22 @@
                     </form>
                     </li>*@
 
-                <li class="nav-item">
+@*                <li class="nav-item">
                     <form method="post" asp-controller="Account" asp-action="Logout">
-                        @*<img src="@staff.PhotoUrl" width="25" height="25" alt="Avatar" />&nbsp;*@ 
+                        <img src="@staff.StaffPhotoUrl" width="25" height="25" alt="Avatar" />&nbsp; 
                         <button type="submit" style="width:auto" class="nav-link btn btn-link dropdown-item">
-                            <img src="@staff.PhotoUrl" width="30" height="30" alt="Avatar" class="avatar" /> Logout
+                            <img src="@user.PhotoUrl" width="30" height="30" alt="Avatar" class="avatar" /> Logout
                         </button>
                     </form>
-                </li>
+                </li>*@
 
-                        
+                @*                <h5><a class="nav-link" asp-action="Logout" asp-controller="Account"><img src="@staff.StaffPhotoUrl" width="30" height="30" alt="Avatar" class="avatar" /> Logout</a></h5>*@
             }
         </ul>
     </div>
 </nav>
 
-<environment include="Staging,Development">
+<environment include="Staging,Home,Work,Development">
     <h5 class="title text-center text-danger mt-1">THIS IS A TEST SITE</h5>
 </environment>
 

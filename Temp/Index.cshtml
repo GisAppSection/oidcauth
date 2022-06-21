@@ -1,15 +1,13 @@
-﻿@*@model User
-
-@{
+﻿@*@{
     ViewData["Title"] = "Home Page";
-}*@
+}
 
 @using OidcAuthV3.DataAccess
 @inject IDataFunctions df
 @{
     // Staff staff = df.GetCurrentStaffM();
     User user = df.GetCurrentUserM();
-}
+}*@
 
 
 <div class="text-center">
@@ -33,22 +31,20 @@
 
 
 
-    @if (Context.User.Identity.IsAuthenticated == true)
+@*    @if (Context.User.Identity.IsAuthenticated == true)
     {
-        <div>User Full Name: @user.UserFullName</div>
-        <div>User Full Name: @user.UserEmail</div>
-@*        <div>User Agency: @user.AgencyCd</div>
+        <div>User Full Name: @user.FullName</div>
+        <div>User Full Name: @user.Email</div>
+        <div>User Agency: @user.AgencyCd</div>
         <div>User City ID: @user.PaySrId</div>
-        <div>User is Active: @user.UserWorkPhone.ToUpper()</div>
+        <div>User is Active: @user.WorkPhone.ToUpper()</div>
         <div>User AccessToken: @user.access_token</div>
         <div>User Expires In: @user.expires_in</div>
         <div>User Refresh Token: @user.refresh_token</div>
         <p></p>
         <p></p>
-        <div>Staff Photo <img src="@user.UserPhotoUrl" alt="Avatar" class="avatar" /></div>*@
-
-        @*<div><a asp-action="RevokeAccessToken" asp-controller="Account">Revoke Acces Token</a></div>*@
-    }
+        <div>Staff Photo <img src="@user.PhotoUrl" alt="Avatar" class="avatar" /></div>
+    }*@
 
 
 </div>

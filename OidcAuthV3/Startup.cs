@@ -63,7 +63,8 @@ namespace OidcAuthV3
             services.AddScoped<IDataFunctions, DataFunctions>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpContextAccessor();
-            services.AddScoped<IUserDataService, UserDataService>();
+            // services.AddScoped<IUserDataService, UserDataService>();
+            services.AddScoped<IStaffDataService, StaffDataService>();
             services.AddScoped<IEmailService, EmailService>();
 
             services.AddHttpClient();
@@ -100,26 +101,50 @@ namespace OidcAuthV3
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName.ToUpper() != "PRODUCTION" && env.EnvironmentName.ToUpper() != "STAGING")
+            //if (env.IsDevelopment() || env.IsEnvironment("Home") || env.IsEnvironment("Work"))
             {
+                //app.UseExceptionHandler("/Error/ErrorAction");
+                //app.UseExceptionHandler();
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error/ErrorAction");
+                //app.UseDeveloperExceptionPage();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // https://dotnetcoretutorials.com/2017/01/08/set-x-frame-options-asp-net-core/
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Frame-Options", "DENY");
+                await next();
+            });
+
+            app.UseCookiePolicy(
+                new CookiePolicyOptions
+                {
+                    Secure = CookieSecurePolicy.Always
+                });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
+
+            app.UseCors(x => x
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+
+            app.UseSession();
 
             app.UseRouting();
 
-
+            // the following two lines must come after app.UseRouting()
             app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseSession();
+            app.UseAuthorization();  // this is needed if you are using role authorization
 
             app.UseEndpoints(endpoints =>
             {

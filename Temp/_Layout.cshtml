@@ -1,9 +1,11 @@
-﻿@*@inject IStaffDataService staffDataService*@
+﻿@inject IUserDataService userDataService
 
-@*@{
-    Staff staff = staffDataService.GetStaff();
+@{
+    User user = userDataService.GetUser();
+
     var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
-}*@
+
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,9 +71,7 @@
 
 <body>
 
-    @await Html.PartialAsync("_Navbar")
-
-@*    @if (controllerName.ToLower() == "public")
+    @if (controllerName.ToLower() == "public")
     {
         @await Html.PartialAsync("_Navbar")
     }
@@ -82,7 +82,7 @@
     else
     {
         @await Html.PartialAsync("_Navbar")
-    }*@
+    }
 
     <div id="spinner" style="display:none;">
         <img src="~/images/loading.gif" alt="Loading" name="img-spinner" id="img-spinner" width="150" height="150" border="0">
