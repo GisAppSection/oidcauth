@@ -32,6 +32,9 @@ namespace OidcAuthV3.Controllers
             string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
 
+
+
+        // For dotnet apps remove the two paramerters serviceCode and agency Code.
         public IActionResult Login(string serviceCode, string agencyCode)
         {
             if (string.IsNullOrEmpty(serviceCode) || string.IsNullOrEmpty(agencyCode))
@@ -116,8 +119,8 @@ namespace OidcAuthV3.Controllers
             serviceUri = serviceUri.Append("&epaySrId=" + epaySrId);
             serviceUri = serviceUri.Append("&ephotoUrl=" + ephotoUrl);
 
-            return RedirectToAction("Index","Home");           
-            // return Redirect(serviceUri.ToString());
+            // return RedirectToAction("Index","Home");           
+            return Redirect(serviceUri.ToString());
             // return View("UserDetails");
             //return View("UserDetails", user);
             //return View("UserDetails");
