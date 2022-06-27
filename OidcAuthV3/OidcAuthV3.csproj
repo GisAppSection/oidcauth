@@ -13,11 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\DecryptController.cs" />
-    <Compile Remove="Controllers\EncryptController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Views\Home\Privacy.cshtml" />
   </ItemGroup>
 
