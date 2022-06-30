@@ -167,11 +167,27 @@ namespace OidcAuthV3.DataAccess
             var idTokenString = jwt.id_token;
 
 
+            //Error on Line 183.    byte[] data = Convert.FromBase64String(arrStrings[1]);
+            //FormatException: The input is not a valid Base - 64 string as it contains a non - base 64 character, more than two padding characters, or an illegal character among the padding characters.
+
+
+            // function to validate base64 string before conversion to bytes
+            // public static bool IsBase64String(this string s)
+            //{
+            //    s = s.Trim();
+            //    return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+
+            //}
+
+
+
 
             string[] arrStrings = idTokenString.Split('.');
+            arrStrings[1] = arrStrings[1].Replace('-', '+');
+            arrStrings[1] = arrStrings[1].Replace('_', '/');
+
             byte[] data = Convert.FromBase64String(arrStrings[1]);
             string decodedIdToken = Encoding.UTF8.GetString(data);
-
             var idTokenPayLoad = System.Text.Json.JsonSerializer.Deserialize<IdTokenPayLoad>(decodedIdToken);
 
 
