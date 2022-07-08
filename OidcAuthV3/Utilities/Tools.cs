@@ -156,7 +156,7 @@ namespace OidcAuthV3.Utilities
 
 
         // use this function to replace any invalid base64 charcters and add the appropriate padding of = signs.
-        public static string AjustBase64String(string base64String)
+        public static string AdjustBase64String(string base64String)
         {
             if (string.IsNullOrWhiteSpace(base64String))
             {

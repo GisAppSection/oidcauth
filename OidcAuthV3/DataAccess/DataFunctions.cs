@@ -173,7 +173,7 @@ namespace OidcAuthV3.DataAccess
                 //string1 = "eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTU0NTc1MTQ5NDEzNDk0NDYxNzciLCJoZCI6ImxhY2l0eS5vcmciLCJlbWFpbCI6ImFkYW0uYW5hbmRAbGFjaXR5Lm9yZyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiY0RDdV9BbEdiWXRUMzBFeGhRNWszZyIsIm5hbWUiOiJBZGFtIEFuYW5kIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FJdGJ2bW5OY1hFNGVveHdHU2pBSzV1UGZBR2VpMG84VTJiZ1U3THFZUGFmPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkFkYW0iLCJmYW1pbHlfbmFtZSI6IkFuYW5kIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2NTcxNDkxNzMsImV4cCI6MTY1NzE1Mjc3M30";
 
 
-                string1 = Tools.AjustBase64String(string1);
+                string1 = Tools.AdjustBase64String(string1);
 
                 byte[] data = Convert.FromBase64String(string1);
                 string decodedIdToken = Encoding.UTF8.GetString(data);
