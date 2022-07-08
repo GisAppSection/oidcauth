@@ -120,10 +120,10 @@ namespace OidcAuthV3.Controllers
             serviceUri = serviceUri.Append("&ephotoUrl=" + ephotoUrl);
 
             // use the following url for testing
-            //return RedirectToAction("Index","Home"); 
+            return RedirectToAction("Index","Home"); 
             
             // use the following return when redirecting to permits.
-             return Redirect(serviceUri.ToString());
+            // return Redirect(serviceUri.ToString());
 
         }
 

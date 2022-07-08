@@ -288,9 +288,9 @@ namespace OidcAuthV3.DataAccess
             // customSchemas can be nulll for consultants
             if (staffDataJson.customSchemas != null)
             {
-                oidcPaySrId = staffDataJson.customSchemas.LACityEmployeeID.employeeId;
-                oidcPhoneNumer = staffDataJson.customSchemas.LACityCustomAttributes.LACityWorkNumber;
-                oidcMobilePhone = staffDataJson.customSchemas.LACityCustomAttributes.LACityMobileNumber;
+                oidcPaySrId = staffDataJson.customSchemas?.LACityEmployeeID?.employeeId;
+                oidcPhoneNumer = staffDataJson.customSchemas?.LACityCustomAttributes?.LACityWorkNumber;
+                oidcMobilePhone = staffDataJson.customSchemas?.LACityCustomAttributes?.LACityMobileNumber;
             }
 
             var oidcPhotoUrl = staffDataJson.thumbnailPhotoUrl;

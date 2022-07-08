@@ -14,7 +14,7 @@
 
     <p>City Staff Information will be displayed below this line if the user is successfully authenticated.</p>
 
-    @if (Context.User.Identity.IsAuthenticated == false)
+@*    @if (Context.User.Identity.IsAuthenticated == false)
     {
         <p><a asp-action="Login" asp-controller="Account" asp-route-serviceCode="a" asp-route-agencyCode="boe">Login as A-Permit BOE User</a></p>
 
@@ -23,12 +23,12 @@
             Login as B-Permit BOE User
         </a>
     </p>    
-    }
+    }*@
 
-@*    @if (Context.User.Identity.IsAuthenticated == false)
+    @if (Context.User.Identity.IsAuthenticated == false)
     {
         <p><a asp-action="Login" asp-controller="Account" asp-route-serviceCode="a" asp-route-agencyCode="boe">Test Login</a></p>   
-    }*@
+    }
 
 
 
