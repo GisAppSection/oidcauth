@@ -119,12 +119,11 @@ namespace OidcAuthV3.Controllers
             serviceUri = serviceUri.Append("&epaySrId=" + epaySrId);
             serviceUri = serviceUri.Append("&ephotoUrl=" + ephotoUrl);
 
-            // return RedirectToAction("Index","Home");           
-            return Redirect(serviceUri.ToString());
-            // return View("UserDetails");
-            //return View("UserDetails", user);
-            //return View("UserDetails");
-
+            // use the following url for testing
+            return RedirectToAction("Index","Home"); 
+            
+            // use the following return when redirecting to permits.
+            // return Redirect(serviceUri.ToString());
 
         }
 

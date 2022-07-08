@@ -14,7 +14,7 @@
 
     <p>City Staff Information will be displayed below this line if the user is successfully authenticated.</p>
 
-    @if (Context.User.Identity.IsAuthenticated == false)
+@*    @if (Context.User.Identity.IsAuthenticated == false)
     {
         <p><a asp-action="Login" asp-controller="Account" asp-route-serviceCode="a" asp-route-agencyCode="boe">Login as A-Permit BOE User</a></p>
 
@@ -23,6 +23,11 @@
             Login as B-Permit BOE User
         </a>
     </p>    
+    }*@
+
+    @if (Context.User.Identity.IsAuthenticated == false)
+    {
+        <p><a asp-action="Login" asp-controller="Account" asp-route-serviceCode="a" asp-route-agencyCode="boe">Test Login</a></p>   
     }
 
 
@@ -30,15 +35,16 @@
 
     @if (Context.User.Identity.IsAuthenticated == true)
     {
-        <div>User Full Name: @staff.FirstName @staff.LastName</div>
-        <div>User Email: @staff.Email</div>
-        <div>User Agency Code: @staff.AgencyCd</div>
-                <div>Department: @staff.Dept</div>
-        <div>User City ID: @staff.PaySrId</div>
-        <div>User Work Phone: @staff.WorkPhone.ToUpper()</div>
-        <div>User AccessToken (Partial): @staff.access_token.Substring(80)</div>
-        <div>User Expires In: @staff.expires_in</div>
-        <div>User Refresh Token: @staff.refresh_token</div>
+        <div>User Full Name: <strong>@staff.FirstName @staff.LastName</strong></div>
+        <div>User Email: <strong>@staff.Email</strong></div>
+        <div>User Agency Code: <strong>@staff.AgencyCd</strong></div>
+        <div>Department: <strong>@staff.Dept</strong></div>
+        <div>User City PaySR ID: <strong>@staff.PaySrId</strong></div>
+        <div>User Work Phone: <strong>@staff.WorkPhone</strong></div>
+        <div>User Mobile Phone: <strong>@staff.MobilePhone</strong></div>
+        <div>User AccessToken (Partial): <strong>@staff.access_token.Substring(120)</strong></div>
+        <div>User Expires In: <strong>@staff.expires_in</strong></div>
+        <div>User Refresh Token: <strong>@staff.refresh_token</strong></div>
         <p></p>
         <p></p>
         <div>Staff Photo <img src="@staff.PhotoUrl" alt="Avatar" class="avatar" /></div>

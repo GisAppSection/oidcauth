@@ -154,6 +154,44 @@ namespace OidcAuthV3.Utilities
             }
         }
 
+
+        // use this function to replace any invalid base64 charcters and add the appropriate padding of = signs.
+        public static string AjustBase64String(string base64String)
+        {
+            if (string.IsNullOrWhiteSpace(base64String))
+            {
+                throw new Exception("Function received null string.");
+            }
+            else
+            {
+                base64String = base64String.Replace('-', '+');
+                base64String = base64String.Replace('_', '/');
+
+                int xRemainder = base64String.Length % 4;
+                int paddingLength = 4 - xRemainder;
+
+                if (paddingLength == 0)
+                {
+                    // do nothing                   
+                }
+                else if (paddingLength == 1)
+                {
+                    return base64String + "=";
+                }
+                else if (paddingLength == 2)
+                {
+                    return base64String + "==";
+                }
+                else if (paddingLength == 3)
+                {
+                    // add 3 equal signs
+                    return base64String + "===";
+                }
+
+                return base64String;
+            }
+        }
+
         public static string Left(string str, int nCount)
         {
             str = str.Substring(0, nCount);
@@ -941,6 +979,10 @@ namespace OidcAuthV3.Utilities
             }
         }
     }
+
+
+
+
 
     //public static class ControllerExtensions
     //{

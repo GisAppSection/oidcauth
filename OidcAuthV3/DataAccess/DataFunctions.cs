@@ -138,25 +138,6 @@ namespace OidcAuthV3.DataAccess
 
             var jwt = System.Text.Json.JsonSerializer.Deserialize<JwtJson>(responseString);
 
-
-            // keep this one to use for logout
-            //var idTokenString = jwt.id_token;
-            //var accessTokenString = jwt.access_token;
-
-            //string refreshTokenString = null;
-            //if (responseString.Contains("refresh_token"))
-            //{
-            //    refreshTokenString = jwt.refresh_token;
-            //}
-
-
-
-            //string[] arrStrings = idTokenString.Split('.');
-            //byte[] data = Convert.FromBase64String(arrStrings[1]);
-            //string decodedIdToken = Encoding.UTF8.GetString(data);
-
-            //var idTokenPayLoad = System.Text.Json.JsonSerializer.Deserialize<IdTokenPayLoad>(decodedIdToken);
-
             return jwt;
         }
 
@@ -166,117 +147,152 @@ namespace OidcAuthV3.DataAccess
             // keep this one to use for logout
             var idTokenString = jwt.id_token;
 
-
-            //Error on Line 183.    byte[] data = Convert.FromBase64String(arrStrings[1]);
-            //FormatException: The input is not a valid Base - 64 string as it contains a non - base 64 character, more than two padding characters, or an illegal character among the padding characters.
-
-
-            // function to validate base64 string before conversion to bytes
-            // public static bool IsBase64String(this string s)
-            //{
-            //    s = s.Trim();
-            //    return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
-
-            //}
-
-
-
-
             string[] arrStrings = idTokenString.Split('.');
-            arrStrings[1] = arrStrings[1].Replace('-', '+');
-            arrStrings[1] = arrStrings[1].Replace('_', '/');
 
-            byte[] data = Convert.FromBase64String(arrStrings[1]);
-            string decodedIdToken = Encoding.UTF8.GetString(data);
-            var idTokenPayLoad = System.Text.Json.JsonSerializer.Deserialize<IdTokenPayLoad>(decodedIdToken);
+            string string0 = arrStrings[0].Trim();
+            string string1 = arrStrings[1].Trim();
+            string string2 = arrStrings[2].Trim();
+
+            // email developer
+            // comment this if the application runs successfully
+            try
+            {
+                _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "string1 value", string1);
+            }
+            catch
+            {
+                // do nothing
+            }
+
+            StaffData staffDataJson = null;
+
+            try
+            {
+
+                // testing:
+                //string1 = "eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTU0NTc1MTQ5NDEzNDk0NDYxNzciLCJoZCI6ImxhY2l0eS5vcmciLCJlbWFpbCI6ImFkYW0uYW5hbmRAbGFjaXR5Lm9yZyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiY0RDdV9BbEdiWXRUMzBFeGhRNWszZyIsIm5hbWUiOiJBZGFtIEFuYW5kIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FJdGJ2bW5OY1hFNGVveHdHU2pBSzV1UGZBR2VpMG84VTJiZ1U3THFZUGFmPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkFkYW0iLCJmYW1pbHlfbmFtZSI6IkFuYW5kIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2NTcxNDkxNzMsImV4cCI6MTY1NzE1Mjc3M30";
 
 
-            // HttpClient Start
-            var userDetailsUrl = "https://admin.googleapis.com/admin/directory/v1/users/" + idTokenPayLoad.sub + "?projection=full&viewType=domain_public";
+                string1 = Tools.AjustBase64String(string1);
+
+                byte[] data = Convert.FromBase64String(string1);
+                string decodedIdToken = Encoding.UTF8.GetString(data);
+                var idTokenPayLoad = System.Text.Json.JsonSerializer.Deserialize<IdTokenPayLoad>(decodedIdToken);
 
 
-            HttpClient httpClient = _httpClientFactory.CreateClient();
-            httpClient.BaseAddress = new Uri(userDetailsUrl);
 
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+                // HttpClient Start
+                var userDetailsUrl = "https://admin.googleapis.com/admin/directory/v1/users/" + idTokenPayLoad.sub + "?projection=full&viewType=domain_public";
 
-            httpClient.DefaultRequestHeaders.Authorization
-                         = new AuthenticationHeaderValue("Bearer", jwt.access_token);
 
-            var result = httpClient.GetAsync(httpClient.BaseAddress).Result;
-            var jsonResult = result.Content.ReadAsStringAsync().Result;
+                HttpClient httpClient = _httpClientFactory.CreateClient();
+                httpClient.BaseAddress = new Uri(userDetailsUrl);
+
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+
+                httpClient.DefaultRequestHeaders.Authorization
+                             = new AuthenticationHeaderValue("Bearer", jwt.access_token);
+
+                var result = httpClient.GetAsync(httpClient.BaseAddress).Result;
+                var jsonResult = result.Content.ReadAsStringAsync().Result;
+
+                staffDataJson = System.Text.Json.JsonSerializer.Deserialize<StaffData>(jsonResult);
+            }
+            catch (Exception ex)
+            {
+                _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "oidcAuth Exception", ex.ToString());
+            }
+
 
             // HttpClient End
 
-            var staffDataJson = System.Text.Json.JsonSerializer.Deserialize<StaffData>(jsonResult);
+
 
 
             string oidcAgencyCd = null;
             var organizations = staffDataJson.organizations;
             var depts = organizations.ToArray();
             var dept = depts[0].department;
-            if (dept.Contains("Public Works") && dept.Contains("Engineering"))
-            {
-                oidcAgencyCd = "BOE";
 
+            if (!string.IsNullOrEmpty(dept))
+            {
+                if (dept.Contains("Public Works") && dept.Contains("Engineering"))
+                {
+                    oidcAgencyCd = "BOE";
+
+                }
+
+                else if (dept.Contains("Public Works") && dept.Contains("Accounting"))
+                {
+                    oidcAgencyCd = "OOA";
+
+                }
+
+                else if (dept.Contains("Public Works") && dept.Contains("Light"))
+                {
+                    oidcAgencyCd = "BSL";
+
+                }
+
+                else if (dept.Contains("Public Works") && dept.Contains("Street"))
+                {
+                    oidcAgencyCd = "BSS";
+
+                }
+
+                else if (dept.Contains("Park") && dept.Contains("Rap"))
+                {
+                    oidcAgencyCd = "RAP";
+
+                }
+
+                else if (dept.Contains("Fire") && dept.Contains("LAFD"))
+                {
+                    oidcAgencyCd = "LAFD";
+
+                }
+
+                else if (dept.Contains("LADBS") && dept.Contains("DBS"))
+                {
+                    oidcAgencyCd = "LADBS";
+
+                }
+
+                // other deptartments has to be coded or create a lookup table.
             }
 
-            else if (dept.Contains("Public Works") && dept.Contains("Accounting"))
-            {
-                oidcAgencyCd = "OOA";
-
-            }
-
-            else if (dept.Contains("Public Works") && dept.Contains("Light"))
-            {
-                oidcAgencyCd = "BSL";
-
-            }
-
-            else if (dept.Contains("Public Works") && dept.Contains("Street"))
-            {
-                oidcAgencyCd = "BSS";
-
-            }
-
-            else if (dept.Contains("Park") && dept.Contains("Rap"))
-            {
-                oidcAgencyCd = "RAP";
-
-            }
-
-            else if (dept.Contains("Fire") && dept.Contains("LAFD"))
-            {
-                oidcAgencyCd = "LAFD";
-
-            }
-
-            else if (dept.Contains("LADBS") && dept.Contains("DBS"))
-            {
-                oidcAgencyCd = "LADBS";
-
-            }
             else
             {
                 oidcAgencyCd = null;
             }
 
-            //var accessTokenString = jwt.access_token;
 
+            // set some defaults:
+            string oidcPaySrId = null;
+            string oidcPhoneNumer = null;
+            string oidcMobilePhone = null;
+
+            //var accessTokenString = jwt.access_token;
+            // we are not using refresh_token in this application
             string refreshTokenString = null;
             if (!string.IsNullOrEmpty(jwt.refresh_token))
             {
                 refreshTokenString = jwt.refresh_token;
             }
+            // we are not using refresh_token in this application
 
-
-            // values returned by google IDM+
+            // values returned by google IDM
             var oidcEmail = staffDataJson.primaryEmail;
             var oidcLastName = staffDataJson.name.familyName;
             var oidcFirstName = staffDataJson.name.givenName;
-            var oidcPaySrId = staffDataJson.customSchemas.LACityEmployeeID.employeeId;
-            var oidcPhoneNumer = staffDataJson.customSchemas.LACityCustomAttributes.LACityWorkNumber;
-            var oidcMobilePhone = staffDataJson.customSchemas.LACityCustomAttributes.LACityMobileNumber;
+            // customSchemas can be nulll for consultants
+            if (staffDataJson.customSchemas != null)
+            {
+                oidcPaySrId = staffDataJson.customSchemas.LACityEmployeeID.employeeId;
+                oidcPhoneNumer = staffDataJson.customSchemas.LACityCustomAttributes.LACityWorkNumber;
+                oidcMobilePhone = staffDataJson.customSchemas.LACityCustomAttributes.LACityMobileNumber;
+            }
+
             var oidcPhotoUrl = staffDataJson.thumbnailPhotoUrl;
             var oidcDept = dept;
 
