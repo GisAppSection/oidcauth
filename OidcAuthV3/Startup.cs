@@ -101,20 +101,35 @@ namespace OidcAuthV3
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //if (env.EnvironmentName.ToUpper() != "PRODUCTION" && env.EnvironmentName.ToUpper() != "STAGING")
+            ////if (env.IsDevelopment() || env.IsEnvironment("Home") || env.IsEnvironment("Work"))
+            //{
+            //    //app.UseExceptionHandler("/Error/ErrorAction");
+            //    //app.UseExceptionHandler();
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    //app.UseExceptionHandler("/Error/ErrorAction");
+            //    app.UseDeveloperExceptionPage();
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
+
             if (env.EnvironmentName.ToUpper() != "PRODUCTION" && env.EnvironmentName.ToUpper() != "STAGING")
-            //if (env.IsDevelopment() || env.IsEnvironment("Home") || env.IsEnvironment("Work"))
             {
-                //app.UseExceptionHandler("/Error/ErrorAction");
+                app.UseExceptionHandler("/Error/ErrorAction");
                 //app.UseExceptionHandler();
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
             }
             else
             {
-                //app.UseExceptionHandler("/Error/ErrorAction");
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/Error/ErrorAction");
+                //app.UseDeveloperExceptionPage();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
 
             // https://dotnetcoretutorials.com/2017/01/08/set-x-frame-options-asp-net-core/
             app.Use(async (context, next) =>

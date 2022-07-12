@@ -19,7 +19,9 @@ namespace OidcAuthV3.DataAccess
 
         
         public virtual DbSet<ServiceInfo> ServiceInfo { get; set; }
-       
+
+        public virtual DbSet<ExceptionLog> ExceptionLog { get; set; }
+
 
     }
 

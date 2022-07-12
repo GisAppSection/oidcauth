@@ -12,7 +12,7 @@ namespace OidcAuthV3.Controllers
     {
         public IActionResult Index()
         {
-            return Content(Tools.DecryptString("TI6z8WjG4QfVzq+YXKWg8TwMCzC11ANuFYkD2XBFq59e+l8khVHIaBAVstjgSfQPcmrMW+MRLPQU/ZnXOFJIQ0qGDv74WJcdr4Hquq2FXB8=-/+/NjM3OTA1NzU0NzY5Mjk5Nzk0"));
+            return Content(Tools.DecryptString("sj6GYShji9aL1SuPNYv0uc1cM6+dVUWDEkeJQz6fcCIMyRP6STnvk7FPmWDLHbR3uvuNxvyrkNa+mmsFTMVuh7as+sv8ZIy3v+KW9J2RMQw=-/+/NjM3MzU3MTMwODMwOTA1MzY5"));
 
         }
     }

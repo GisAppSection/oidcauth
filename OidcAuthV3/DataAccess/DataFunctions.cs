@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 using OidcAuthV3.DataAccess;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace OidcAuthV3.DataAccess
 {
@@ -153,16 +156,16 @@ namespace OidcAuthV3.DataAccess
             string string1 = arrStrings[1].Trim();
             string string2 = arrStrings[2].Trim();
 
-            // email developer
-            // comment this if the application runs successfully
-            try
-            {
-                _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "string1 value", string1);
-            }
-            catch
-            {
-                // do nothing
-            }
+            //// email developer
+            //// comment this if the application runs successfully
+            //try
+            //{
+            //    _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "string1 value", string1);
+            //}
+            //catch
+            //{
+            //    // do nothing
+            //}
 
             StaffData staffDataJson = null;
 
@@ -319,6 +322,75 @@ namespace OidcAuthV3.DataAccess
             }
 
             return staff;
+        }
+
+        public long GetNextLogId()
+        {
+            SqlParameter result = new SqlParameter("@result", System.Data.SqlDbType.BigInt)
+            {
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            _oidcAuthContext.Database.ExecuteSqlRaw("SELECT @result = (NEXT VALUE FOR LogIdSequence)", result);
+
+            return (long)result.Value;
+        }
+
+        public bool WriteException(string exceptionSubject, string exceptionDetails)
+        {
+            ExceptionLog exceptionLog = new ExceptionLog();
+
+            try
+            {
+                exceptionLog.LogId = GetNextLogId();
+                exceptionLog.LogDate = DateTime.Now;
+                exceptionLog.LogSubject = exceptionSubject;
+                exceptionLog.LogDetails = exceptionDetails;
+                _oidcAuthContext.ExceptionLog.Add(exceptionLog);
+                _oidcAuthContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public List<ExceptionLog> ListExceptionLogsM()
+        {
+            var exceptionLogs = _oidcAuthContext.ExceptionLog.OrderByDescending(t => t.LogDate).Take(300).ToList();
+            return exceptionLogs;
+        }
+
+
+        public bool DeleteExceptionLogM(long logId)
+        {
+            var exceptionLog = _oidcAuthContext.ExceptionLog.Where(t => t.LogId == logId).FirstOrDefault();
+            if (exceptionLog != null)
+            {
+                _oidcAuthContext.Remove(exceptionLog);
+                _oidcAuthContext.SaveChanges();
+                return true;
+
+            }
+            return false;
+
+        }
+
+        public bool DeleteExceptionLog30M()
+        {
+            DateTime lastDate = DateTime.Now.AddDays(-30);
+            List<ExceptionLog> exceptionLogs = _oidcAuthContext.ExceptionLog.Where(t => t.LogDate  < lastDate).ToList();
+            if (exceptionLogs.Count > 0)
+            {
+                _oidcAuthContext.Remove(exceptionLogs);
+                _oidcAuthContext.SaveChanges();
+                return true;
+
+            }
+            return false;
+
         }
 
 

@@ -46,13 +46,20 @@
             </li>
         </ul>
 
+        <ul class="navbar-nav mr-auto">
+            &nbsp;&nbsp;
+            <li class="nav-item">
+                <h5><a class="nav-link" asp-controller="Error" asp-action="ListExceptions"><span class="fa fa-info fa-x"></span> Error Log</a></h5>
+            </li>
+        </ul>
+
         <ul class="nav navbar-nav ml-auto">
 
             @if (!@User.Identity.IsAuthenticated)
             {
                 @*<li class="nav-item"><h5><a class="nav-link" asp-controller="Home" asp-action="Login"><span class="fa fa-power-off"></span> Log in</a></h5></li>*@
 
-                <li class="nav-item"><h5>Not Authenticated</h5></li>
+                <li class="nav-item"><h5><a class="nav-link" asp-action="Login" asp-controller="Account" asp-route-serviceCode="a" asp-route-agencyCode="boe"><span class="fa fa-power-off"></span> Login</a></h5></li>
                 @*<a class="nav-link" asp-action="Login" asp-controller="Account"><span class="fa fa-power-off"></span> Login</a>*@
             }
 

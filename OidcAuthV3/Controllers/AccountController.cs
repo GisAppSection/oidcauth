@@ -22,13 +22,14 @@ namespace OidcAuthV3.Controllers
     public class AccountController : Controller
     {
         private readonly IDataFunctions _dataFunctions;
+        private readonly IEmailService _emailService;
 
-       public AccountController(IDataFunctions dataFunctions)
+        public AccountController(IDataFunctions dataFunctions, IEmailService emailService)
         {
             //_configuration = configuration;
             //_env = env;
             _dataFunctions = dataFunctions;
-
+            _emailService = emailService;
             string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
 
@@ -82,6 +83,19 @@ namespace OidcAuthV3.Controllers
 
             Staff staff = await _dataFunctions.GetStaffDetails(jwt);
 
+            // email staff values as json to developer to monitor the system for a few weeks.
+            try
+            {
+                string staffJson = JsonConvert.SerializeObject(staff);
+                _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "staff object values from oidc auth", staffJson);
+            }
+            catch
+            {
+                // do nothing
+            }
+
+
+            // throw new Exception("Test Exception Error Controller and Logging to database");
 
             // User Claims & SignIn Start
             IList<Claim> userClaims = new List<Claim>
@@ -120,10 +134,10 @@ namespace OidcAuthV3.Controllers
             serviceUri = serviceUri.Append("&ephotoUrl=" + ephotoUrl);
 
             // use the following url for testing
-            return RedirectToAction("Index","Home"); 
+            //return RedirectToAction("Index","Home"); 
             
             // use the following return when redirecting to permits.
-            // return Redirect(serviceUri.ToString());
+            return Redirect(serviceUri.ToString());
 
         }
 
