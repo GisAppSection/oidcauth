@@ -52,7 +52,7 @@ namespace OidcAuthV3.Controllers
             ViewBag.HelpLink = exceptionDetails.Error.HelpLink;
             //+currentUserFullName
             // Activate the email feature when in production
-            string emailTo = "Essam.Amarragy@Lacity.org";
+            string emailTo = "Essam.Amarragy@Lacity.org";  // add all email address of users who should be aware of the error.  Comma separated.
                 string emailCc = "";  // Essamce@gmail.com
                 string emailBcc = "";
                 string emailSubjectLine = "!!! OidcAuthV3 Error (" + envName + ") !!!";
