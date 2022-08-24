@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OidcAuthV3.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace OidcAuthV3.DataAccess
 {
@@ -25,6 +25,6 @@ namespace OidcAuthV3.DataAccess
         bool DeleteExceptionLogM(long logId);
 
         bool DeleteExceptionLog30M();
-
+         
     }
 }

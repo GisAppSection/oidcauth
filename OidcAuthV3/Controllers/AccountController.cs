@@ -78,7 +78,10 @@ namespace OidcAuthV3.Controllers
             string[] stateArray = state.Split('|');
             string serviceCode = stateArray[0];
             string agencyCode = stateArray[1];
-
+            //let's write state, code, and agencycode in logs
+            _dataFunctions.WriteException("Info log", "state :" + state);
+            _dataFunctions.WriteException("Info log", "serviceCode :" + serviceCode);
+            _dataFunctions.WriteException("Info log", "agencyCode :" + agencyCode);
             JwtJson jwt = await _dataFunctions.GetJwt(code);
 
             Staff staff = await _dataFunctions.GetStaffDetails(jwt);
@@ -117,7 +120,7 @@ namespace OidcAuthV3.Controllers
             // Using a local identity and signing in.
             _ = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-
+            
             string baseUrl = _dataFunctions.GetBaseRedirectUri(serviceCode, agencyCode);
             //"http://localhost/apermits/oidc/loginboeuser.cfm";
 
