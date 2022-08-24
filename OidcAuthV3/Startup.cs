@@ -118,14 +118,14 @@ namespace OidcAuthV3
 
             if (env.EnvironmentName.ToUpper() != "PRODUCTION" && env.EnvironmentName.ToUpper() != "STAGING")
             {
-                app.UseExceptionHandler("/Error/ErrorAction");
+                //app.UseExceptionHandler("/Error/ErrorAction");
                 //app.UseExceptionHandler();
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Error/ErrorAction");
-                //app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Error/ErrorAction");
+                app.UseDeveloperExceptionPage();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

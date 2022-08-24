@@ -344,8 +344,11 @@ namespace OidcAuthV3.DataAccess
             {
                 exceptionLog.LogId = GetNextLogId();
                 exceptionLog.LogDate = DateTime.Now;
+                exceptionLog.EnvType = envName;
+                exceptionLog.LogType = "Exception";
                 exceptionLog.LogSubject = exceptionSubject;
                 exceptionLog.LogDetails = exceptionDetails;
+
                 _oidcAuthContext.ExceptionLog.Add(exceptionLog);
                 _oidcAuthContext.SaveChanges();
                 return true;
