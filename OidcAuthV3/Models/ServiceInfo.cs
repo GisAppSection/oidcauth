@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OidcAuthV3.Models
+namespace OidcAuthModels
 {
 	[Table("tServiceInfo")]
 	public class ServiceInfo

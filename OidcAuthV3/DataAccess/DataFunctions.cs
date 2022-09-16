@@ -1,31 +1,31 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using OidcAuthV3.Models;
-using OidcAuthV3.Utilities;
+using OidcAuthModels;
+using OidcAuthUtilities;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 
 using Microsoft.AspNetCore.Mvc;
-using OidcAuthV3.DataAccess;
+using OidcAuthDataAccess;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic; 
 
-namespace OidcAuthV3.DataAccess
+namespace OidcAuthDataAccess
 {
     public class DataFunctions : IDataFunctions
     {
         private OidcAuthDbContext _oidcAuthContext;
         private readonly IHttpClientFactory _httpClientFactory;
-        private IStaffDataService _staffDataService;
-        private IWebHostEnvironment _env;
-        private IConfiguration _configuration;
-        private IEmailService _emailService;
+        private readonly IStaffDataService _staffDataService;
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
         private readonly string client_id;
         private readonly string client_secret;
@@ -203,7 +203,7 @@ namespace OidcAuthV3.DataAccess
             }
             catch (Exception ex)
             {
-                _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "oidcAuth Exception", ex.ToString());
+                await _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "oidcAuth Exception", ex.ToString());
             }
 
 

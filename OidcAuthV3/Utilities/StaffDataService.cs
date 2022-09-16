@@ -4,7 +4,7 @@ using System.Linq;
 
 // reading user data from a claim
 
-namespace OidcAuthV3.Models
+namespace OidcAuthModels
 {
     public class StaffDataService : IStaffDataService
     {

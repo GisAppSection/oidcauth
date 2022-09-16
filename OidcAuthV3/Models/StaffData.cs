@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OidcAuthV3.Models
+namespace OidcAuthModels
 {
     public class StaffData
     {

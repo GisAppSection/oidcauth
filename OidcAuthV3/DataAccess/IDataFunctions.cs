@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using OidcAuthV3.Models;
+using OidcAuthModels;
 using System.Collections.Generic;
 using System.Threading.Tasks; 
 
-namespace OidcAuthV3.DataAccess
+namespace OidcAuthDataAccess
 {
     public interface IDataFunctions
     {

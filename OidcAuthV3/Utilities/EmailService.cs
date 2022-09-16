@@ -6,7 +6,7 @@ using System;
 
 //https://steemit.com/utopian-io/@babelek/how-to-send-email-using-asp-net-core-2-0
 
-namespace OidcAuthV3.Utilities
+namespace OidcAuthUtilities
 {
     public class EmailService : IEmailService
     {

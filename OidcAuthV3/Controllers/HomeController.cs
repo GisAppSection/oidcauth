@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using OidcAuthV3.Models;
+using OidcAuthModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OidcAuthV3.Controllers
+namespace OidcAuthControllers
 {
     [AllowAnonymous]
     public class HomeController : Controller

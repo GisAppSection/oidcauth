@@ -22,7 +22,7 @@ using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace OidcAuthV3.Utilities
+namespace OidcAuthUtilities
 {
     public static class Tools
     {

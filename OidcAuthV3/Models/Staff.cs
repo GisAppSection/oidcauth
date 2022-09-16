@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Permissions;
 using System.Threading.Tasks;
-using OidcAuthV3.Models;
+using OidcAuthModels;
 
-namespace OidcAuthV3.Models
+namespace OidcAuthModels
 {
     public class Staff
     {

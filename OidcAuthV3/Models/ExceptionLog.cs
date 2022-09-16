@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OidcAuthV3.Models
+namespace OidcAuthModels
 {
     public class ExceptionLog
     {

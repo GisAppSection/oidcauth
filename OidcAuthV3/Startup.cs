@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using OidcAuthV3.DataAccess;
-using OidcAuthV3.Utilities;
-using OidcAuthV3.Models;
+using OidcAuthDataAccess;
+using OidcAuthUtilities;
+using OidcAuthModels;
 
 
 namespace OidcAuthV3
@@ -82,6 +82,9 @@ namespace OidcAuthV3
             //    // Make the session cookie essential
             //    options.Cookie.IsEssential = true;
             //});
+
+
+
 
             // Adds a default in-database implementation of IDistributedCache
             services.AddDistributedSqlServerCache(options =>

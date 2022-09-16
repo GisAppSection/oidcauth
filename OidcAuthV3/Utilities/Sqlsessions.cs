@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OidcAuthV3.Utilities
+namespace OidcAuthUtilities
 {
     [Table("tSQLSessions")]
     public partial class Sqlsessions

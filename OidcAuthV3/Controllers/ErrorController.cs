@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using OidcAuthV3.Models;
-using OidcAuthV3.Utilities;
-using OidcAuthV3.DataAccess;
+using OidcAuthModels;
+using OidcAuthUtilities;
+using OidcAuthDataAccess;
 
-namespace OidcAuthV3.Controllers
+namespace OidcAuthControllers
 {
     public class ErrorController : Controller
     {

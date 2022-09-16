@@ -1,10 +1,10 @@
 ﻿using System;
-using OidcAuthV3.Models;
+using OidcAuthModels;
 using Microsoft.EntityFrameworkCore;
 
 // https://docs.microsoft.com/en-us/ef/core/modeling/keys
 
-namespace OidcAuthV3.DataAccess
+namespace OidcAuthDataAccess
 {
     public partial class OidcAuthDbContext : DbContext
     {

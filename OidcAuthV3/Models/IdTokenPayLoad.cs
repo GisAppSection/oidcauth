@@ -1,4 +1,4 @@
-﻿namespace OidcAuthV3.Models
+﻿namespace OidcAuthModels
 {
     public class IdTokenPayLoad
     {

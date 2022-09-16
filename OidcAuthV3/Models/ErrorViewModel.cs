@@ -1,6 +1,6 @@
 using System;
 
-namespace OidcAuthV3.Models
+namespace OidcAuthModels
 {
     public class ErrorViewModel
     {

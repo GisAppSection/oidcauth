@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using OidcAuthV3.DataAccess;
-using OidcAuthV3.Models;
-using OidcAuthV3.Utilities;
+using OidcAuthDataAccess;
+using OidcAuthModels;
+using OidcAuthUtilities;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace OidcAuthV3.Controllers
+namespace OidcAuthControllers
 {
     public class AccountController : Controller
     {
@@ -90,7 +90,7 @@ namespace OidcAuthV3.Controllers
             try
             {
                 string staffJson = JsonConvert.SerializeObject(staff);
-                _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "staff object values from oidc auth", staffJson);
+                await _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "staff object values from oidc auth", staffJson);
             }
             catch
             {
