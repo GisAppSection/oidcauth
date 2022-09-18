@@ -22,6 +22,10 @@ namespace OidcAuth.DataAccess
 
         public virtual DbSet<ExceptionLog> ExceptionLog { get; set; }
 
+        public virtual DbSet<Staff> Staff { get; set; }
+
+        public virtual DbSet<IdmDeptName> IdmDeptName { get; set; }
+
 
     }
 

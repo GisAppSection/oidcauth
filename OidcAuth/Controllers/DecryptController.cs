@@ -11,7 +11,7 @@ namespace OidcAuth.Controllers
     {
         public IActionResult Index()
         {
-            return Content(Tools.DecryptString("qJ/qEFqbape8E41ds0jKTO/JUtjc2XSZRJpr7JXnWkGTXipbKS6LSH38mXrIxbaGQBPl9c+T3/SDC6xLMVofCJJl+gE6boKAmbV1ioIkvZg=-/+/NjM3OTg1ODY2MjUzNDQwNDIw"));
+            return Content(Tools.DecryptString("TI6z8WjG4QfVzq+YXKWg8TwMCzC11ANuFYkD2XBFq59e+l8khVHIaBAVstjgSfQPcmrMW+MRLPQU/ZnXOFJIQ0qGDv74WJcdr4Hquq2FXB8=-/+/NjM3OTA1NzU0NzY5Mjk5Nzk0"));
 
         }
     }

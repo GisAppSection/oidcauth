@@ -23,13 +23,15 @@ namespace OidcAuth.Controllers
     {
         private readonly IDataFunctions _dataFunctions;
         private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IDataFunctions dataFunctions, IEmailService emailService)
+        public AccountController(IDataFunctions dataFunctions, IEmailService emailService, IConfiguration configuration)
         {
             //_configuration = configuration;
             //_env = env;
             _dataFunctions = dataFunctions;
             _emailService = emailService;
+            _configuration = configuration;
             string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
 
@@ -50,7 +52,7 @@ namespace OidcAuth.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception("Error: Something went wrong, please try again later." + ex);
+                throw new Exception("Error: Something went wrong, please try again later." + ex.Message);
             }
 
         }
@@ -60,8 +62,13 @@ namespace OidcAuth.Controllers
         {
             if (!string.IsNullOrWhiteSpace(error))
             {
-                // email error to eng.dspAccounts@lacity.org
-                return RedirectToAction("Index", "Home", new { status = "Failed" });
+                // email admin
+                var emailTo = _configuration["AppConfig:ConnStringOidcAuthDb"];
+                await _emailService.SendEmailAsync(emailTo,"","", "GoogleIDM Error", "Counld Not Login User" + error);
+                ViewBag.Message = "Something went wrong. The Support team was notified of the error.";
+
+                return View("_Error");
+                //return RedirectToAction("Index", "Home", new { status = "Failed" });
             }
 
             // validate that the state received = state sent
@@ -79,12 +86,15 @@ namespace OidcAuth.Controllers
             string serviceCode = stateArray[0];
             string agencyCode = stateArray[1];
             //let's write state, code, and agencycode in logs
-            _dataFunctions.WriteException("Info log", "state :" + state);
-            _dataFunctions.WriteException("Info log", "serviceCode :" + serviceCode);
-            _dataFunctions.WriteException("Info log", "agencyCode :" + agencyCode);
+            //_dataFunctions.WriteException("Info log", "state :" + state);
+            //_dataFunctions.WriteException("Info log", "serviceCode :" + serviceCode);
+            //_dataFunctions.WriteException("Info log", "agencyCode :" + agencyCode);
             JwtJson jwt = await _dataFunctions.GetJwt(code);
 
             Staff staff = await _dataFunctions.GetStaffDetails(jwt);
+
+            // let us save the staff object to the oidcauth database within the tCityStaff
+
 
             // email staff values as json to developer to monitor the system for a few weeks.
             try
@@ -121,9 +131,9 @@ namespace OidcAuth.Controllers
             _ = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             
+            // This is a call to database
             string baseUrl = _dataFunctions.GetBaseRedirectUri(serviceCode, agencyCode);
             //"http://localhost/apermits/oidc/loginboeuser.cfm";
-
 
 
             StringBuilder serviceUri = new StringBuilder();

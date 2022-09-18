@@ -315,6 +315,8 @@ namespace OidcAuthDataAccess
             staff.AgencyCd = oidcAgencyCd;
             staff.access_token = jwt.access_token;
             staff.expires_in = jwt.expires_in;
+            staff.DeptCd = GetStaffDeptCd(staff.Dept);
+            staff.LastUpdateDt = DateTime.Now;
 
             if (!string.IsNullOrEmpty(jwt.refresh_token))
             {
@@ -384,16 +386,41 @@ namespace OidcAuthDataAccess
         public bool DeleteExceptionLog30M()
         {
             DateTime lastDate = DateTime.Now.AddDays(-30);
-            List<ExceptionLog> exceptionLogs = _oidcAuthContext.ExceptionLog.Where(t => t.LogDate  < lastDate).ToList();
+            List<ExceptionLog> exceptionLogs = _oidcAuthContext.ExceptionLog.Where(t => t.LogDate  >= lastDate).ToList();
             if (exceptionLogs.Count > 0)
             {
-                _oidcAuthContext.Remove(exceptionLogs);
+                _oidcAuthContext.RemoveRange(exceptionLogs);
                 _oidcAuthContext.SaveChanges();
-                return true;
 
             }
-            return false;
+            return true;
 
+        }
+
+        public bool ClearExceptionLogM()
+        {
+            List<ExceptionLog> exceptionLogs = _oidcAuthContext.ExceptionLog.ToList();
+            if (exceptionLogs.Count > 0)
+            {
+                _oidcAuthContext.RemoveRange(exceptionLogs);
+                _oidcAuthContext.SaveChanges();
+
+            }
+            return true;
+
+        }
+
+        public string GetStaffDeptCd(string dept)
+        {
+            IdmDeptName idmDeptName = _oidcAuthContext.IdmDeptName.Where(t => t.IdmDept.ToLower() == dept.ToLower()).FirstOrDefault();
+            if (idmDeptName != null && !string.IsNullOrEmpty(idmDeptName.DeptCd))
+            { 
+                return idmDeptName.DeptCd; 
+            }
+            else
+            {
+                return null;
+            }
         }
 
 

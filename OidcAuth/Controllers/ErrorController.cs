@@ -12,6 +12,7 @@ using OidcAuth.DataAccess;
 
 namespace OidcAuth.Controllers
 {
+
     public class ErrorController : Controller
     {
 
@@ -66,33 +67,53 @@ namespace OidcAuth.Controllers
                 return View("Error");
         }
 
-        public IActionResult ListExceptions()
-        {
-            var exceptionLogs = _dataFunctions.ListExceptionLogsM();
-            return View(exceptionLogs);
-        }
 
-        public IActionResult DeleteExceptionLog(long logId)
-        {
-            bool success = _dataFunctions.DeleteExceptionLogM(logId);
-            if (!success)
-            {
-                throw new Exception("An error was encountered.  Couldn't delete this exception log with id = " +logId);
-            }
-            return RedirectToAction("ListExceptions", "Error");
-        }
+        //The following sections can be activated once we add an amdin authentication to this app.
+        //[Authorize]
+        //public IActionResult ListExceptions()
+        //{
+        //    var exceptionLogs = _dataFunctions.ListExceptionLogsM();
+        //    return View(exceptionLogs);
+        //}
 
-        public IActionResult DeleteExceptionLog30()
-        {
-            bool success = _dataFunctions.DeleteExceptionLog30M();
 
-            if (!success)
-            {
-                throw new Exception("An error was encountered.  Couldn't delete older exception logs.");
-            }
+        //[Authorize]
+        //public IActionResult DeleteExceptionLog(long logId)
+        //{
+        //    bool success = _dataFunctions.DeleteExceptionLogM(logId);
+        //    if (!success)
+        //    {
+        //        throw new Exception("An error was encountered.  Couldn't delete this exception log with id = " +logId);
+        //    }
+        //    return RedirectToAction("ListExceptions", "Error");
+        //}
 
-            return RedirectToAction("ListExceptions", "Error");
-        }
+
+        //[Authorize]
+        //public IActionResult DeleteExceptionLog30()
+        //{
+        //    bool success = _dataFunctions.DeleteExceptionLog30M();
+
+        //    if (!success)
+        //    {
+        //        throw new Exception("An error was encountered.  Couldn't delete older exception logs.");
+        //    }
+
+        //    return RedirectToAction("ListExceptions", "Error");
+        //}
+
+        //[Authorize]
+        //public IActionResult ClearExceptionLog()
+        //{
+        //    bool success = _dataFunctions.ClearExceptionLogM();
+
+        //    if (!success)
+        //    {
+        //        throw new Exception("An error was encountered.  Couldn't delete all exception logs.");
+        //    }
+
+        //    return RedirectToAction("ListExceptions", "Error");
+        //}
 
 
     }  

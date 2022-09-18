@@ -16,17 +16,6 @@
 
 @*    @if (Context.User.Identity.IsAuthenticated == false)
     {
-        <p><a asp-action="Login" asp-controller="Account" asp-route-serviceCode="a" asp-route-agencyCode="boe">Login as A-Permit BOE User</a></p>
-
-    <p>
-        <a asp-action="Login" asp-controller="Account" asp-route-serviceCode="b" asp-route-agencyCode="boe">
-            Login as B-Permit BOE User
-        </a>
-    </p>    
-    }*@
-
-    @if (Context.User.Identity.IsAuthenticated == false)
-    {
         <p><a asp-action="Login" asp-controller="Account" asp-route-serviceCode="a" asp-route-agencyCode="boe">Test Login</a></p>   
     }
 
@@ -39,16 +28,18 @@
         <div>User Email: <strong>@staff.Email</strong></div>
         <div>User Agency Code: <strong>@staff.AgencyCd</strong></div>
         <div>Department: <strong>@staff.Dept</strong></div>
+        <div>DepCd: <strong>@staff.DeptCd</strong></div>
         <div>User City PaySR ID: <strong>@staff.PaySrId</strong></div>
         <div>User Work Phone: <strong>@staff.WorkPhone</strong></div>
         <div>User Mobile Phone: <strong>@staff.MobilePhone</strong></div>
         <div>User AccessToken (Partial): <strong>@staff.access_token.Substring(120)</strong></div>
         <div>User Expires In: <strong>@staff.expires_in</strong></div>
         <div>User Refresh Token: <strong>@staff.refresh_token</strong></div>
+        <div>Recrod Last Read Date: <strong>@staff.LastUpdateDt</strong></div>
         <p></p>
         <p></p>
         <div>Staff Photo <img src="@staff.PhotoUrl" alt="Avatar" class="avatar" /></div>
-    }
+    }*@
 
 
 </div>

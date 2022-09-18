@@ -46,12 +46,15 @@
             </li>
         </ul>
 
-        <ul class="navbar-nav mr-auto">
-            &nbsp;&nbsp;
-            <li class="nav-item">
-                <h5><a class="nav-link" asp-controller="Error" asp-action="ListExceptions"><span class="fa fa-info fa-x"></span> Error Log</a></h5>
-            </li>
-        </ul>
+@*        @if (@User.Identity.IsAuthenticated)
+        {
+            <ul class="navbar-nav mr-auto">
+                &nbsp;&nbsp;
+                <li class="nav-item">
+                    <h5><a class="nav-link" asp-controller="Error" asp-action="ListExceptions"><span class="fa fa-info fa-x"></span> Error Log</a></h5>
+                </li>
+            </ul>
+        }*@
 
         <ul class="nav navbar-nav ml-auto">
 
@@ -66,25 +69,25 @@
             @if (@User.Identity.IsAuthenticated)
             {
 
-@*                <li class="nav-item ">
-                    <form method="post" asp-controller="Home" asp-action="Logout">
-                    <button type="submit" style="width:auto"
-                    class="nav-link btn btn-link">
-                    <span class="fa fa-power-off"></span> Log out
-                    </button>
-                    </form>
-                    </li>*@
+                @*                <li class="nav-item ">
+            <form method="post" asp-controller="Home" asp-action="Logout">
+            <button type="submit" style="width:auto"
+            class="nav-link btn btn-link">
+            <span class="fa fa-power-off"></span> Log out
+            </button>
+            </form>
+            </li>*@
 
                 <li class="nav-item">
                     <form method="post" asp-controller="Account" asp-action="Logout">
-                        @*<img src="@staff.PhotoUrl" width="25" height="25" alt="Avatar" />&nbsp;*@ 
+                        @*<img src="@staff.PhotoUrl" width="25" height="25" alt="Avatar" />&nbsp;*@
                         <button type="submit" style="width:auto" class="nav-link btn btn-link dropdown-item">
                             <img src="@staff.PhotoUrl" width="30" height="30" alt="Avatar" class="avatar" /> Logout
                         </button>
                     </form>
                 </li>
 
-                        
+
             }
         </ul>
     </div>

@@ -12,7 +12,7 @@ namespace OidcAuth.Controllers
     {
         public IActionResult Index()
         {
-            return Content(Tools.EncryptString("Server=10.191.140.60;Database=oidcauth;User Id=BoeDbWriter; Password=$$Boe1149w;"));
+            return Content(Tools.EncryptString("Server=dsp3;Database=oidcauth;User Id=BoeDbWriter; Password=$$Boe1149w;"));
         }
     }
 }

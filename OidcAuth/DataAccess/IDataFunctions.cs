@@ -16,6 +16,8 @@ namespace OidcAuth.DataAccess
 
         Task<Staff> GetStaffDetails(JwtJson jwt);
 
+        string GetStaffDeptCd(string dept);
+
         bool WriteException(string exceptionSubject, string exceptionDetails);
 
         long GetNextLogId();
@@ -25,6 +27,9 @@ namespace OidcAuth.DataAccess
         bool DeleteExceptionLogM(long logId);
 
         bool DeleteExceptionLog30M();
-         
+        bool ClearExceptionLogM();
+
+
+
     }
 }
