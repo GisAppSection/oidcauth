@@ -138,9 +138,9 @@ namespace OidcAuth.Controllers
 
             StringBuilder serviceUri = new StringBuilder();
             serviceUri = serviceUri.Append(baseUrl);
-            string eemail = Tools.eencrypt(staff.Email);
-            string epaySrId = Tools.eencrypt(staff.PaySrId);
-            string ephotoUrl = Tools.eencrypt(staff.PhotoUrl);
+            string eemail = Tools.Eencrypt(staff.Email);
+            string epaySrId = Tools.Eencrypt(staff.PaySrId);
+            string ephotoUrl = Tools.Eencrypt(staff.PhotoUrl);
 
             serviceUri = serviceUri.Append("?eemail=" + eemail);
             serviceUri = serviceUri.Append("&epaySrId=" + epaySrId);

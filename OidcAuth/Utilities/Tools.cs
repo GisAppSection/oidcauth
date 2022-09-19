@@ -47,7 +47,7 @@ namespace OidcAuth.Utilities
         }
 
         // encrypt then encode
-        public static string eencrypt(string queryString)
+        public static string Eencrypt(string queryString)
 
         {
             if (string.IsNullOrWhiteSpace(queryString))
@@ -69,7 +69,7 @@ namespace OidcAuth.Utilities
         }
 
         // decode then decrypt
-        public static string ddecrypt(string eencString)
+        public static string Ddecrypt(string eencString)
         {
             if (string.IsNullOrWhiteSpace(eencString))
             {

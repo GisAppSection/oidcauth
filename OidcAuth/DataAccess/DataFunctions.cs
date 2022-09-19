@@ -312,10 +312,20 @@ namespace OidcAuthDataAccess
             staff.MobilePhone = oidcMobilePhone;
             staff.PhotoUrl = oidcPhotoUrl;
             staff.Dept = oidcDept;
+            if (!string.IsNullOrEmpty(oidcDept))
+            {
+                staff.DeptCd = GetStaffDeptCd(staff.Dept);
+            }
+            else
+            {
+                staff.DeptCd = null;
+            }
+            
+
             staff.AgencyCd = oidcAgencyCd;
             staff.access_token = jwt.access_token;
             staff.expires_in = jwt.expires_in;
-            staff.DeptCd = GetStaffDeptCd(staff.Dept);
+
             staff.LastUpdateDt = DateTime.Now;
 
             if (!string.IsNullOrEmpty(jwt.refresh_token))
