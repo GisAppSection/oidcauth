@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Database\oidcauth_09-23-2022.bacpac" />
     <None Include="Views\Home\Privacy.cshtml" />
   </ItemGroup>
 
