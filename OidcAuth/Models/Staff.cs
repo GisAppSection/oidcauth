@@ -16,9 +16,11 @@ namespace OidcAuth.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PaySrId { get; set; }
-        public string DeptCd { get; set; }
+
         public string Dept { get; set; }
-        public string AgencyCd { get; set; }
+        public string DeptCd { get; set; }
+
+        //public string AgencyCd { get; set; }
         public string WorkPhone { get; set; }
         public string MobilePhone { get; set; }
         public string Email { get; set; }

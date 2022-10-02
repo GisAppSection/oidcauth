@@ -14,7 +14,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 
 namespace OidcAuthDataAccess
 {
@@ -107,19 +107,16 @@ namespace OidcAuthDataAccess
 
         public async Task<JwtJson> GetJwt(string code)
         {
-            // move to function
             // string scope = "openid profile email https://www.googleapis.com/auth/admin.directory.user.readonly";
             StringBuilder sb = new StringBuilder();
 
-            //sb.Append(token_uri);
+            //sb.Append(token_uri); // not needed
             sb.Append("code=" + code);
             sb.Append("&client_id=" + client_id);
             sb.Append("&client_secret=" + client_secret);
             sb.Append("&redirect_uri=" + redirect_uri);
             sb.Append("&grant_type=authorization_code");
-
-
-            //sb.Append("&scope=" + scope);
+            //sb.Append("&scope=" + scope);  //  not needed
 
             string requestData = sb.ToString();
 
@@ -131,15 +128,43 @@ namespace OidcAuthDataAccess
             HttpContent content = new StringContent(requestData); // converts requestData to form fields
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
             httpClient.DefaultRequestHeaders.Accept
-            .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+            .Add(new MediaTypeWithQualityHeaderValue("application/json"));    //ACCEPT header
             // content.Headers.Add("Accept", "application/json");
-            HttpResponseMessage httpResponse = await httpClient.PostAsync(token_uri, content);
+
+            HttpResponseMessage httpResponse = new HttpResponseMessage();
+
+            try
+            {
+                httpResponse = await httpClient.PostAsync(token_uri, content);
+            }
+            catch
+            {
+                throw new Exception("Error GetJwt100: Something is wrong with getting httpResponse");
+            }
+
 
             // validate that httpResponse has status = 200 before contuing.
-
             var responseString = httpResponse.Content.ReadAsStringAsync().Result;
 
-            var jwt = System.Text.Json.JsonSerializer.Deserialize<JwtJson>(responseString);
+            if (_configuration["AppConfig:SendAdminEmails"] == "y")
+            {
+                // email response string to admin for verification
+                var emailTo = _configuration["AppConfig:AppAdminEmail"];
+                await _emailService.SendEmailAsync(emailTo, "", "", "ODIC Response String", "Response String = <br/> " + responseString);
+            }
+
+
+            JwtJson jwt = new JwtJson();
+
+            try
+            {
+                jwt = System.Text.Json.JsonSerializer.Deserialize<JwtJson>(responseString);
+
+            }
+            catch
+            {
+                throw new Exception("GetJwt110: Something is wrong extracting jwt");
+            }
 
             return jwt;
         }
@@ -154,126 +179,123 @@ namespace OidcAuthDataAccess
 
             string string0 = arrStrings[0].Trim();
             string string1 = arrStrings[1].Trim();
-            string string2 = arrStrings[2].Trim();
-
-            //// email developer
-            //// comment this if the application runs successfully
-            //try
-            //{
-            //    _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "string1 value", string1);
-            //}
-            //catch
-            //{
-            //    // do nothing
-            //}
-
             StaffData staffDataJson = null;
 
+            // testing:
+            //string1 = "eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTU0NTc1MTQ5NDEzNDk0NDYxNzciLCJoZCI6ImxhY2l0eS5vcmciLCJlbWFpbCI6ImFkYW0uYW5hbmRAbGFjaXR5Lm9yZyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiY0RDdV9BbEdiWXRUMzBFeGhRNWszZyIsIm5hbWUiOiJBZGFtIEFuYW5kIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FJdGJ2bW5OY1hFNGVveHdHU2pBSzV1UGZBR2VpMG84VTJiZ1U3THFZUGFmPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkFkYW0iLCJmYW1pbHlfbmFtZSI6IkFuYW5kIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2NTcxNDkxNzMsImV4cCI6MTY1NzE1Mjc3M30";
+
+
+            string1 = Tools.AdjustBase64String(string1);
+
+            byte[] data = Convert.FromBase64String(string1);
+            string decodedIdToken = Encoding.UTF8.GetString(data);
+            var idTokenPayLoad = System.Text.Json.JsonSerializer.Deserialize<IdTokenPayLoad>(decodedIdToken);
+
+
+
+            // HttpClient Start
+            var userDetailsUrl = "https://admin.googleapis.com/admin/directory/v1/users/" + idTokenPayLoad.sub + "?projection=full&viewType=domain_public";
+
+
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            httpClient.BaseAddress = new Uri(userDetailsUrl);
+
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+
+            httpClient.DefaultRequestHeaders.Authorization
+                         = new AuthenticationHeaderValue("Bearer", jwt.access_token);
+
+
+            HttpResponseMessage result = null;
             try
             {
+                result = httpClient.GetAsync(httpClient.BaseAddress).Result;
 
-                // testing:
-                //string1 = "eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3OTUyODE5OTEwMzgtbWlrZDgxaDU4ajI5cTV1dWJidDBtbnU4MThiamJnNWEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTU0NTc1MTQ5NDEzNDk0NDYxNzciLCJoZCI6ImxhY2l0eS5vcmciLCJlbWFpbCI6ImFkYW0uYW5hbmRAbGFjaXR5Lm9yZyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiY0RDdV9BbEdiWXRUMzBFeGhRNWszZyIsIm5hbWUiOiJBZGFtIEFuYW5kIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FJdGJ2bW5OY1hFNGVveHdHU2pBSzV1UGZBR2VpMG84VTJiZ1U3THFZUGFmPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkFkYW0iLCJmYW1pbHlfbmFtZSI6IkFuYW5kIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2NTcxNDkxNzMsImV4cCI6MTY1NzE1Mjc3M30";
-
-
-                string1 = Tools.AdjustBase64String(string1);
-
-                byte[] data = Convert.FromBase64String(string1);
-                string decodedIdToken = Encoding.UTF8.GetString(data);
-                var idTokenPayLoad = System.Text.Json.JsonSerializer.Deserialize<IdTokenPayLoad>(decodedIdToken);
-
-
-
-                // HttpClient Start
-                var userDetailsUrl = "https://admin.googleapis.com/admin/directory/v1/users/" + idTokenPayLoad.sub + "?projection=full&viewType=domain_public";
-
-
-                HttpClient httpClient = _httpClientFactory.CreateClient();
-                httpClient.BaseAddress = new Uri(userDetailsUrl);
-
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
-
-                httpClient.DefaultRequestHeaders.Authorization
-                             = new AuthenticationHeaderValue("Bearer", jwt.access_token);
-
-                var result = httpClient.GetAsync(httpClient.BaseAddress).Result;
-                var jsonResult = result.Content.ReadAsStringAsync().Result;
-
-                staffDataJson = System.Text.Json.JsonSerializer.Deserialize<StaffData>(jsonResult);
             }
-            catch (Exception ex)
+            catch
             {
-                await _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "oidcAuth Exception", ex.ToString());
+                throw new Exception("Error GetStaffDetails100.");
             }
 
+            //if (_configuration["AppConfig:SendAdminEmails"] == "y")
+            //{
+            //    //email response string to admin for verification
+            //    var emailTo = _configuration["AppConfig:AppAdminEmail"];
+            //    await _emailService.SendEmailAsync(emailTo, "", "", "GetStaffDetails Received Message", "Recevived Message = <br/> " + result.ToString());
+            //}
+
+
+            var jsonResult = result.Content.ReadAsStringAsync().Result;
+
+            staffDataJson = System.Text.Json.JsonSerializer.Deserialize<StaffData>(jsonResult);
 
             // HttpClient End
+            //string oidcDeptCd = null;
 
 
 
 
-            string oidcAgencyCd = null;
-            var organizations = staffDataJson.organizations;
-            var depts = organizations.ToArray();
-            var dept = depts[0].department;
+            //    if (!string.IsNullOrEmpty(dept))
+            //        {
+            //    if (dept.Contains("Public Works") && dept.Contains("Engineering"))
+            //    {
+            //        oidcAgencyCd = "BOE";
 
-            if (!string.IsNullOrEmpty(dept))
-            {
-                if (dept.Contains("Public Works") && dept.Contains("Engineering"))
-                {
-                    oidcAgencyCd = "BOE";
+            //    }
 
-                }
+            //    else if (dept.Contains("Public Works") && dept.Contains("Accounting"))
+            //    {
+            //        oidcAgencyCd = "OOA";
 
-                else if (dept.Contains("Public Works") && dept.Contains("Accounting"))
-                {
-                    oidcAgencyCd = "OOA";
+            //    }
 
-                }
+            //    else if (dept.Contains("Public Works") && dept.Contains("Light"))
+            //    {
+            //        oidcAgencyCd = "BSL";
 
-                else if (dept.Contains("Public Works") && dept.Contains("Light"))
-                {
-                    oidcAgencyCd = "BSL";
+            //    }
 
-                }
+            //    else if (dept.Contains("Public Works") && dept.Contains("Street"))
+            //    {
+            //        oidcAgencyCd = "BSS";
 
-                else if (dept.Contains("Public Works") && dept.Contains("Street"))
-                {
-                    oidcAgencyCd = "BSS";
+            //    }
 
-                }
+            //    else if (dept.Contains("Park") && dept.Contains("Rap"))
+            //    {
+            //        oidcAgencyCd = "RAP";
 
-                else if (dept.Contains("Park") && dept.Contains("Rap"))
-                {
-                    oidcAgencyCd = "RAP";
+            //    }
 
-                }
+            //    else if (dept.Contains("Fire") && dept.Contains("LAFD"))
+            //    {
+            //        oidcAgencyCd = "LAFD";
 
-                else if (dept.Contains("Fire") && dept.Contains("LAFD"))
-                {
-                    oidcAgencyCd = "LAFD";
+            //    }
 
-                }
+            //    else if (dept.Contains("LADBS") && dept.Contains("DBS"))
+            //    {
+            //        oidcAgencyCd = "LADBS";
 
-                else if (dept.Contains("LADBS") && dept.Contains("DBS"))
-                {
-                    oidcAgencyCd = "LADBS";
+            //    }
 
-                }
+            //    // other deptartments has to be coded or create a lookup table.
+            //}
 
-                // other deptartments has to be coded or create a lookup table.
-            }
-
-            else
-            {
-                oidcAgencyCd = null;
-            }
+            //else
+            //{
+            //    oidcAgencyCd = null;
+            //}
 
 
             // set some defaults:
             string oidcPaySrId = null;
             string oidcPhoneNumer = null;
             string oidcMobilePhone = null;
+
+            var organizations = staffDataJson.organizations;
+            var depts = organizations.ToArray();
+            var oidcDept = depts[0].department;
 
             //var accessTokenString = jwt.access_token;
             // we are not using refresh_token in this application
@@ -297,7 +319,6 @@ namespace OidcAuthDataAccess
             }
 
             var oidcPhotoUrl = staffDataJson.thumbnailPhotoUrl;
-            var oidcDept = dept;
 
             var staff = new Staff();
 
@@ -320,9 +341,9 @@ namespace OidcAuthDataAccess
             {
                 staff.DeptCd = null;
             }
-            
 
-            staff.AgencyCd = oidcAgencyCd;
+
+            //staff.AgencyCd = oidcAgencyCd;
             staff.access_token = jwt.access_token;
             staff.expires_in = jwt.expires_in;
 
@@ -396,7 +417,7 @@ namespace OidcAuthDataAccess
         public bool DeleteExceptionLog30M()
         {
             DateTime lastDate = DateTime.Now.AddDays(-30);
-            List<ExceptionLog> exceptionLogs = _oidcAuthContext.ExceptionLog.Where(t => t.LogDate  >= lastDate).ToList();
+            List<ExceptionLog> exceptionLogs = _oidcAuthContext.ExceptionLog.Where(t => t.LogDate >= lastDate).ToList();
             if (exceptionLogs.Count > 0)
             {
                 _oidcAuthContext.RemoveRange(exceptionLogs);
@@ -424,8 +445,8 @@ namespace OidcAuthDataAccess
         {
             IdmDeptName idmDeptName = _oidcAuthContext.IdmDeptName.Where(t => t.IdmDept.ToLower() == dept.ToLower()).FirstOrDefault();
             if (idmDeptName != null && !string.IsNullOrEmpty(idmDeptName.DeptCd))
-            { 
-                return idmDeptName.DeptCd; 
+            {
+                return idmDeptName.DeptCd;
             }
             else
             {

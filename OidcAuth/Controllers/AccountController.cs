@@ -33,26 +33,27 @@ namespace OidcAuth.Controllers
             _emailService = emailService;
             _configuration = configuration;
             string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
         }
-
-
 
         // For dotnet apps remove the two paramerters serviceCode and agency Code.
         public IActionResult Login(string serviceCode, string agencyCode)
         {
+            // validation
             if (string.IsNullOrEmpty(serviceCode) || string.IsNullOrEmpty(agencyCode))
             {
-                ViewBag.Message = "An Error Occured.";
-                return View("_Error");
+                throw new Exception("Error Login100: Invalid Login.");
+                //ViewBag.Message = "An Error Occured. Incomplete Information.";
+                //return View("_Error");
             }
             try
             {
                 string getCodeUri = _dataFunctions.GetAuthCode(serviceCode, agencyCode, HttpContext);
                 return Redirect(getCodeUri);
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception("Error: Something went wrong, please try again later." + ex.Message);
+                throw new Exception("Error Login110: Something went wrong, please try again later.");
             }
 
         }
@@ -62,13 +63,14 @@ namespace OidcAuth.Controllers
         {
             if (!string.IsNullOrWhiteSpace(error))
             {
-                // email admin
-                var emailTo = _configuration["AppConfig:ConnStringOidcAuthDb"];
-                await _emailService.SendEmailAsync(emailTo,"","", "GoogleIDM Error", "Counld Not Login User" + error);
-                ViewBag.Message = "Something went wrong. The Support team was notified of the error.";
+                if (_configuration["AppConfig:SendAdminEmails"] == "y")
+                {
+                    // email admin
+                    var emailTo = _configuration["AppConfig:AppAdminEmail"];
+                    await _emailService.SendEmailAsync(emailTo, "", "", "Error CallBack100: GoogleIDM received error", "Error CallBack100: Could Not Login User " + error);
+                }
 
-                return View("_Error");
-                //return RedirectToAction("Index", "Home", new { status = "Failed" });
+                throw new Exception("Error CallBack100: GoogleIDM received error " + error);
             }
 
             // validate that the state received = state sent
@@ -77,9 +79,13 @@ namespace OidcAuth.Controllers
 
             if (stateSent.ToLower() != stateReceived.ToLower())
             {
-                ViewBag.Message = "Something went wrong. The Support team was notified of the error.";
-                // email admin 
-                return View("_Error");
+                if (_configuration["AppConfig:SendAdminEmails"] == "y")
+                {
+                    // email admin
+                    var emailTo = _configuration["AppConfig:AppAdminEmail"];
+                    await _emailService.SendEmailAsync(emailTo, "", "", "Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "CallBack110: State Received= " + stateReceived + " is not equal to State Sent= " + stateSent);
+                }
+                throw new Exception("Error CallBack110: stateSent is not equal to stateReceived, Check session variables.");
             }
 
             string[] stateArray = state.Split('|');
@@ -89,7 +95,22 @@ namespace OidcAuth.Controllers
             //_dataFunctions.WriteException("Info log", "state :" + state);
             //_dataFunctions.WriteException("Info log", "serviceCode :" + serviceCode);
             //_dataFunctions.WriteException("Info log", "agencyCode :" + agencyCode);
+
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                if (_configuration["AppConfig:SendAdminEmails"] == "y")
+                {
+                    // email admin
+                    var emailTo = _configuration["AppConfig:AppAdminEmail"];
+                    await _emailService.SendEmailAsync(emailTo, "", "", "Error AC120: GoogleIDM code not received.", "Error AC 120: not receiving code from Google IDM " + error);
+                }
+
+                    throw new Exception("Error CallBack120: did not receive code from Google IDM.");
+            }
+
+
             JwtJson jwt = await _dataFunctions.GetJwt(code);
+
 
             Staff staff = await _dataFunctions.GetStaffDetails(jwt);
 
@@ -100,11 +121,15 @@ namespace OidcAuth.Controllers
             try
             {
                 string staffJson = JsonConvert.SerializeObject(staff);
-                await _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "staff object values from oidc auth", staffJson);
+                if (_configuration["AppConfig:SendAdminEmails"] == "y")
+                {
+                    await _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "staff object values from oidc auth", staffJson);
+                }
+
             }
             catch
             {
-                // do nothing
+                throw new Exception("Error CallBack120: Could not Serialize object staff for emailing admin.");
             }
 
 
@@ -130,7 +155,7 @@ namespace OidcAuth.Controllers
             // Using a local identity and signing in.
             _ = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            
+
             // This is a call to database
             string baseUrl = _dataFunctions.GetBaseRedirectUri(serviceCode, agencyCode);
             //"http://localhost/apermits/oidc/loginboeuser.cfm";
@@ -148,7 +173,7 @@ namespace OidcAuth.Controllers
 
             // use the following url for testing
             //return RedirectToAction("Index","Home"); 
-            
+
             // use the following return when redirecting to permits.
             return Redirect(serviceUri.ToString());
 
