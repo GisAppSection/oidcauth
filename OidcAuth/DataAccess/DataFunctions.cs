@@ -146,12 +146,12 @@ namespace OidcAuthDataAccess
             // validate that httpResponse has status = 200 before contuing.
             var responseString = httpResponse.Content.ReadAsStringAsync().Result;
 
-            if (_configuration["AppConfig:SendAdminEmails"] == "y")
-            {
-                // email response string to admin for verification
-                var emailTo = _configuration["AppConfig:AppAdminEmail"];
-                await _emailService.SendEmailAsync(emailTo, "", "", "ODIC Response String", "Response String = <br/> " + responseString);
-            }
+            //if (_configuration["AppConfig:SendAdminEmails"] == "y")
+            //{
+            //    // email response string to admin for verification
+            //    var emailTo = _configuration["AppConfig:AppAdminEmail"];
+            //    await _emailService.SendEmailAsync(emailTo, "", "", "ODIC Response String", "Response String = <br/> " + responseString);
+            //}
 
 
             JwtJson jwt = new JwtJson();

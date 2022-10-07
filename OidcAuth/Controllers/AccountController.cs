@@ -128,10 +128,10 @@ namespace OidcAuth.Controllers
             try
             {
                 string staffJson = JsonConvert.SerializeObject(staff);
-                if (_configuration["AppConfig:SendAdminEmails"] == "y")
-                {
-                    await _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "staff object values from oidc auth", staffJson);
-                }
+                //if (_configuration["AppConfig:SendAdminEmails"] == "y")
+                //{
+                //    await _emailService.SendEmailAsync("essam.amarragy@lacity.org", "", "", "staff object values from oidc auth", staffJson);
+                //}
 
             }
             catch
