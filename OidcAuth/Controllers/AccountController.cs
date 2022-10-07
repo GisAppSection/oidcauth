@@ -77,6 +77,13 @@ namespace OidcAuth.Controllers
             var stateSent = HttpContext.Session.GetString("state");
             var stateReceived = state;
 
+            if (_configuration["AppConfig:SendAdminEmails"] == "y" && string.IsNullOrEmpty(stateReceived) )
+            {
+                // email admin
+                var emailTo = _configuration["AppConfig:AppAdminEmail"];
+                await _emailService.SendEmailAsync(emailTo, "", "", "Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "CallBack110: State Received= null " + " and State Sent= " + stateSent);
+            }
+
             if (stateSent.ToLower() != stateReceived.ToLower())
             {
                 if (_configuration["AppConfig:SendAdminEmails"] == "y")
