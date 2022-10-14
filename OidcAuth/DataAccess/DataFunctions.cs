@@ -294,8 +294,20 @@ namespace OidcAuthDataAccess
             string oidcMobilePhone = null;
 
             var organizations = staffDataJson.organizations;
-            var depts = organizations.ToArray();
-            var oidcDept = depts[0].department;
+            List<Organization> depts = new List<Organization>();
+            string oidcDept = null;
+            if (organizations != null)
+            {
+                depts = organizations.ToList();
+                oidcDept = depts[0].department;
+            }
+            else
+            {
+                depts = null;
+                oidcDept = null;
+
+            }
+
 
             //var accessTokenString = jwt.access_token;
             // we are not using refresh_token in this application
