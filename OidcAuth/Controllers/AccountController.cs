@@ -33,7 +33,6 @@ namespace OidcAuth.Controllers
             _emailService = emailService;
             _configuration = configuration;
             string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
         }
 
         // For dotnet apps remove the two paramerters serviceCode and agency Code.
