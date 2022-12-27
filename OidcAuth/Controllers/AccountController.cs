@@ -62,7 +62,7 @@ namespace OidcAuth.Controllers
 
         public async Task<IActionResult> CallBack(string code, string error, string state)
         {
-            if (!string.IsNullOrWhiteSpace(error))
+             if (!string.IsNullOrWhiteSpace(error))
             {
                 if (_configuration["AppConfig:SendAdminEmails"] == "y")
                 {
