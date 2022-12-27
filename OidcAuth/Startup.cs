@@ -63,9 +63,9 @@ namespace OidcAuthV3
             services.AddScoped<IDataFunctions, DataFunctions>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpContextAccessor();
-            // services.AddScoped<IUserDataService, UserDataService>();
             services.AddScoped<IStaffDataService, StaffDataService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddSingleton<IAppUserData, AppUserData>();
 
             services.AddHttpClient();
 

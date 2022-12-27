@@ -24,14 +24,16 @@ namespace OidcAuth.Controllers
         private readonly IDataFunctions _dataFunctions;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly IAppUserData _appUserData;
 
-        public AccountController(IDataFunctions dataFunctions, IEmailService emailService, IConfiguration configuration)
+        public AccountController(IDataFunctions dataFunctions, IEmailService emailService, IConfiguration configuration, IAppUserData appUserData)
         {
             //_configuration = configuration;
             //_env = env;
             _dataFunctions = dataFunctions;
             _emailService = emailService;
             _configuration = configuration;
+            _appUserData = appUserData;
             string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
 
@@ -47,7 +49,7 @@ namespace OidcAuth.Controllers
             }
             try
             {
-                string getCodeUri = _dataFunctions.GetAuthCode(serviceCode, agencyCode, HttpContext);
+                string getCodeUri = _dataFunctions.GetAuthCode(serviceCode, agencyCode);  // , HttpContext
                 return Redirect(getCodeUri);
             }
             catch
@@ -73,7 +75,8 @@ namespace OidcAuth.Controllers
             }
 
             // validate that the state received = state sent
-            var stateSent = HttpContext.Session.GetString("state");
+            // var stateSent = HttpContext.Session.GetString("state");
+            var stateSent = _appUserData.GoogleIDMState;
             var stateReceived = state;
 
             if (_configuration["AppConfig:SendAdminEmails"] == "y" && string.IsNullOrEmpty(stateReceived) )
@@ -91,7 +94,8 @@ namespace OidcAuth.Controllers
                     var emailTo = _configuration["AppConfig:AppAdminEmail"];
                     await _emailService.SendEmailAsync(emailTo, "", "", "Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "CallBack110: State Received= " + stateReceived + " is not equal to State Sent= " + stateSent);
                 }
-                throw new Exception("Error CallBack110: stateSent is not equal to stateReceived, Check session variables.");
+                // Activate the line below at a later time.
+                //throw new Exception("Error CallBack110: stateSent is not equal to stateReceived, Check session variables.");
             }
 
             string[] stateArray = state.Split('|');
@@ -152,7 +156,7 @@ namespace OidcAuth.Controllers
 
 
             // place all user data in a session
-            HttpContext.Session.SetJson("staffData", staff);
+            //HttpContext.Session.SetJson("staffData", staff);
 
             var userIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
 

@@ -22,6 +22,7 @@ namespace OidcAuthDataAccess
     {
         private OidcAuthDbContext _oidcAuthContext;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IAppUserData _appUserData;
         private readonly IStaffDataService _staffDataService;
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
@@ -35,7 +36,7 @@ namespace OidcAuthDataAccess
         private readonly string revoke_uri;
 
         private string envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        public DataFunctions(OidcAuthDbContext oidcAuthContext, IConfiguration configuration, IWebHostEnvironment env, IEmailService emailService, IStaffDataService staffDataService, IHttpClientFactory httpClientFactory)
+        public DataFunctions(OidcAuthDbContext oidcAuthContext, IConfiguration configuration, IWebHostEnvironment env, IEmailService emailService, IStaffDataService staffDataService, IHttpClientFactory httpClientFactory, IAppUserData appUserData)
         {
             _oidcAuthContext = oidcAuthContext;
             _staffDataService = staffDataService;
@@ -50,6 +51,7 @@ namespace OidcAuthDataAccess
             auth_uri = _configuration["GoogleIdm:auth_uri"];
             token_uri = _configuration["GoogleIdm:token_uri"];
             _httpClientFactory = httpClientFactory;
+            _appUserData = appUserData;
 
             // send control to the following GoogleIdm once user is authenticated.  This is the home/callback
             redirect_uri = _configuration["GoogleIdm:redirect_uri"];
@@ -82,12 +84,15 @@ namespace OidcAuthDataAccess
         }
 
 
-        public string GetAuthCode(string serviceCode, string agencyCode, HttpContext httpContext)
+        public string GetAuthCode(string serviceCode, string agencyCode)  // , HttpContext httpContext
         {
             string scope = "openid profile email https://www.googleapis.com/auth/admin.directory.user.readonly";
             Guid stateGuid = Guid.NewGuid();
             string stateSent = serviceCode + "|" + agencyCode + "|" + stateGuid.ToString();
-            httpContext.Session.SetString("state", stateSent);
+            _appUserData.GoogleIDMState = stateSent;
+
+
+            // httpContext.Session.SetString("state", stateSent);
             StringBuilder sb = new StringBuilder();
 
             sb.Append(auth_uri);

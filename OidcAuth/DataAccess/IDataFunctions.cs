@@ -10,7 +10,7 @@ namespace OidcAuth.DataAccess
         Staff GetCurrentStaffM();
         string GetBaseRedirectUri(string serviceCode, string agencyCode);
 
-        string GetAuthCode(string serviceCode, string agencyCode, HttpContext httpcontext);
+        string GetAuthCode(string serviceCode, string agencyCode); // , HttpContext httpcontext
 
         Task<JwtJson> GetJwt(string code);
 
