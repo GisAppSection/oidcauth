@@ -168,7 +168,7 @@ namespace OidcAuthDataAccess
             }
             catch
             {
-                throw new Exception("GetJwt110: Something is wrong extracting jwt");
+                throw new Exception("OidcAuth: GetJwt110: Something is wrong extracting jwt");
             }
 
             return jwt;
@@ -219,7 +219,7 @@ namespace OidcAuthDataAccess
             }
             catch
             {
-                throw new Exception("Error GetStaffDetails100.");
+                throw new Exception("OidcAuth: Error GetStaffDetails100.");
             }
 
             //if (_configuration["AppConfig:SendAdminEmails"] == "y")

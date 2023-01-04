@@ -43,7 +43,7 @@ namespace OidcAuth.Controllers
             // validation
             if (string.IsNullOrEmpty(serviceCode) || string.IsNullOrEmpty(agencyCode))
             {
-                throw new Exception("Error Login100: Invalid Login.");
+                throw new Exception("OidcAuth: Error Login100: Invalid Login.");
                 //ViewBag.Message = "An Error Occured. Incomplete Information.";
                 //return View("_Error");
             }
@@ -54,7 +54,7 @@ namespace OidcAuth.Controllers
             }
             catch
             {
-                throw new Exception("Error Login110: Something went wrong, please try again later.");
+                throw new Exception("OidcAuth: Error Login110: Something went wrong, please try again later.");
             }
 
         }
@@ -68,10 +68,10 @@ namespace OidcAuth.Controllers
                 {
                     // email admin
                     var emailTo = _configuration["AppConfig:AppAdminEmail"];
-                    await _emailService.SendEmailAsync(emailTo, "", "", "Error CallBack100: GoogleIDM received error", "Error CallBack100: Could Not Login User " + error);
+                    await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error CallBack100: GoogleIDM received error", "Error CallBack100: Could Not Login User " + error);
                 }
 
-                throw new Exception("Error CallBack100: GoogleIDM received error " + error);
+                throw new Exception("OidcAuth: Error CallBack100: GoogleIDM received error " + error);
             }
 
             // validate that the state received = state sent
@@ -83,7 +83,7 @@ namespace OidcAuth.Controllers
             {
                 // email admin
                 var emailTo = _configuration["AppConfig:AppAdminEmail"];
-                await _emailService.SendEmailAsync(emailTo, "", "", "Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "CallBack110: State Received= null " + " and State Sent= " + stateSent);
+                await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "OidcAuth: CallBack110: State Received= null " + " and State Sent= " + stateSent);
             }
 
             if (stateSent.ToLower() != stateReceived.ToLower())
@@ -92,7 +92,7 @@ namespace OidcAuth.Controllers
                 {
                     // email admin
                     var emailTo = _configuration["AppConfig:AppAdminEmail"];
-                    await _emailService.SendEmailAsync(emailTo, "", "", "Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "CallBack110: State Received= " + stateReceived + " is not equal to State Sent= " + stateSent);
+                    await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "OidcAuth: CallBack110: State Received= " + stateReceived + " is not equal to State Sent= " + stateSent);
                 }
                 // Activate the line below at a later time.
                 //throw new Exception("Error CallBack110: stateSent is not equal to stateReceived, Check session variables.");
@@ -112,10 +112,10 @@ namespace OidcAuth.Controllers
                 {
                     // email admin
                     var emailTo = _configuration["AppConfig:AppAdminEmail"];
-                    await _emailService.SendEmailAsync(emailTo, "", "", "Error AC120: GoogleIDM code not received.", "Error AC 120: not receiving code from Google IDM " + error);
+                    await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error AC120: GoogleIDM code not received.", "Error AC 120: not receiving code from Google IDM " + error);
                 }
 
-                    throw new Exception("Error CallBack120: did not receive code from Google IDM.");
+                    throw new Exception("OidcAuth: Error CallBack120: did not receive code from Google IDM.");
             }
 
 
@@ -139,11 +139,11 @@ namespace OidcAuth.Controllers
             }
             catch
             {
-                throw new Exception("Error CallBack120: Could not Serialize object staff for emailing admin.");
+                throw new Exception("OidcAuth: Error CallBack120: Could not Serialize object staff for emailing admin.");
             }
 
 
-            // throw new Exception("Test Exception Error Controller and Logging to database");
+            // throw new Exception("OidcAuth: Test Exception Error Controller and Logging to database");
 
             // User Claims & SignIn Start
             IList<Claim> userClaims = new List<Claim>
