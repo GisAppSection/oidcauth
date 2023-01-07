@@ -52,7 +52,7 @@ namespace OidcAuth.Controllers
                 string getCodeUri = _dataFunctions.GetAuthCode(serviceCode, agencyCode);  // , HttpContext
                 return Redirect(getCodeUri);
             }
-            catch
+            catch (Exception ex)
             {
                 throw new Exception("OidcAuth: Error Login110: Something went wrong, please try again later.");
             }
@@ -79,24 +79,24 @@ namespace OidcAuth.Controllers
             var stateSent = _appUserData.GoogleIDMState;
             var stateReceived = state;
 
-            if (_configuration["AppConfig:SendAdminEmails"] == "y" && string.IsNullOrEmpty(stateReceived) )
-            {
-                // email admin
-                var emailTo = _configuration["AppConfig:AppAdminEmail"];
-                await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "OidcAuth: CallBack110: State Received= null " + " and State Sent= " + stateSent);
-            }
+            //if (_configuration["AppConfig:SendAdminEmails"] == "y" && string.IsNullOrEmpty(stateReceived) )
+            //{
+            //    // email admin
+            //    //var emailTo = _configuration["AppConfig:AppAdminEmail"];
+            //    //await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "OidcAuth: CallBack110: State Received= null " + " and State Sent= " + stateSent);
+            //}
 
-            if (stateSent.ToLower() != stateReceived.ToLower())
-            {
-                if (_configuration["AppConfig:SendAdminEmails"] == "y")
-                {
-                    // email admin
-                    var emailTo = _configuration["AppConfig:AppAdminEmail"];
-                    await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "OidcAuth: CallBack110: State Received= " + stateReceived + " is not equal to State Sent= " + stateSent);
-                }
-                // Activate the line below at a later time.
-                //throw new Exception("Error CallBack110: stateSent is not equal to stateReceived, Check session variables.");
-            }
+            //if (stateSent.ToLower() != stateReceived.ToLower())
+            //{
+            //    if (_configuration["AppConfig:SendAdminEmails"] == "y")
+            //    {
+            //        // email admin
+            //        //var emailTo = _configuration["AppConfig:AppAdminEmail"];
+            //        //await _emailService.SendEmailAsync(emailTo, "", "", "OidcAuth: Error CallBack110: stateSent is not equal to stateReceived, Check session variables.", "OidcAuth: CallBack110: State Received= " + stateReceived + " is not equal to State Sent= " + stateSent);
+            //    }
+            //    // Activate the line below at a later time.
+            //    //throw new Exception("Error CallBack110: stateSent is not equal to stateReceived, Check session variables.");
+            //}
 
             string[] stateArray = state.Split('|');
             string serviceCode = stateArray[0];

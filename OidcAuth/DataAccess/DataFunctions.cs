@@ -235,62 +235,6 @@ namespace OidcAuthDataAccess
             staffDataJson = System.Text.Json.JsonSerializer.Deserialize<StaffData>(jsonResult);
 
             // HttpClient End
-            //string oidcDeptCd = null;
-
-
-
-
-            //    if (!string.IsNullOrEmpty(dept))
-            //        {
-            //    if (dept.Contains("Public Works") && dept.Contains("Engineering"))
-            //    {
-            //        oidcAgencyCd = "BOE";
-
-            //    }
-
-            //    else if (dept.Contains("Public Works") && dept.Contains("Accounting"))
-            //    {
-            //        oidcAgencyCd = "OOA";
-
-            //    }
-
-            //    else if (dept.Contains("Public Works") && dept.Contains("Light"))
-            //    {
-            //        oidcAgencyCd = "BSL";
-
-            //    }
-
-            //    else if (dept.Contains("Public Works") && dept.Contains("Street"))
-            //    {
-            //        oidcAgencyCd = "BSS";
-
-            //    }
-
-            //    else if (dept.Contains("Park") && dept.Contains("Rap"))
-            //    {
-            //        oidcAgencyCd = "RAP";
-
-            //    }
-
-            //    else if (dept.Contains("Fire") && dept.Contains("LAFD"))
-            //    {
-            //        oidcAgencyCd = "LAFD";
-
-            //    }
-
-            //    else if (dept.Contains("LADBS") && dept.Contains("DBS"))
-            //    {
-            //        oidcAgencyCd = "LADBS";
-
-            //    }
-
-            //    // other deptartments has to be coded or create a lookup table.
-            //}
-
-            //else
-            //{
-            //    oidcAgencyCd = null;
-            //}
 
 
             // set some defaults:
@@ -338,9 +282,6 @@ namespace OidcAuthDataAccess
             var oidcPhotoUrl = staffDataJson.thumbnailPhotoUrl;
 
             var staff = new Staff();
-
-
-
 
             staff.Email = oidcEmail;
             staff.LastName = oidcLastName;
